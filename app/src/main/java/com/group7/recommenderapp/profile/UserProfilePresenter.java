@@ -1,5 +1,7 @@
 package com.group7.recommenderapp.profile;
 
+import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
+
 import android.provider.ContactsContract;
 
 import com.couchbase.lite.CouchbaseLiteException;
@@ -26,13 +28,13 @@ public class UserProfilePresenter implements UserProfileContract.UserActionsList
         Database database = DatabaseManager.getDatabase();
 
         // tag::docfetch[]
-        String docId = DatabaseManager.getSharedInstance().getCurrentUserDocId();
+        String docId = DatabaseManager.getSharedInstance(getApplicationContext()).getCurrentUserDocId();
 
         if (database != null) {
 
             Map<String, Object> profile = new HashMap<>(); // <1>
 
-            profile.put("email", DatabaseManager.getSharedInstance().currentUser); // <2>
+            profile.put("email", DatabaseManager.getSharedInstance(getApplicationContext()).currentUser); // <2>
 
             Document document = database.getDocument(docId); // <3>
 
@@ -53,7 +55,7 @@ public class UserProfilePresenter implements UserProfileContract.UserActionsList
     {
         Database database = DatabaseManager.getDatabase();
 
-        String docId = DatabaseManager.getSharedInstance().getCurrentUserDocId();
+        String docId = DatabaseManager.getSharedInstance(getApplicationContext()).getCurrentUserDocId();
 
         // tag::docset[]
         MutableDocument mutableDocument = new MutableDocument(docId, profile);

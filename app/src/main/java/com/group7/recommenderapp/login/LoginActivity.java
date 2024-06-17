@@ -28,22 +28,17 @@ public class LoginActivity extends AppCompatActivity {
 
         //makes logging in easier for testing
         imageView = findViewById(R.id.imageViewLogo);
-        imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                usernameInput.setText("demo@example.com");
-                passwordInput.setText("password");
-            }
+        imageView.setOnClickListener(v -> {
+            usernameInput.setText("demo@example.com");
+            passwordInput.setText("password");
         });
 
     }
 
     public void onLoginTapped(View view) {
         if (usernameInput.length() > 0 && passwordInput.length() > 0) {
-            DatabaseManager dbMgr = DatabaseManager.getSharedInstance();
-            dbMgr.initCouchbaseLite(getApplicationContext());
+            DatabaseManager dbMgr = DatabaseManager.getSharedInstance(this);
             dbMgr.openOrCreateDatabaseForUser(getApplicationContext(), usernameInput.getText().toString());
-
             Intent intent = new Intent(getApplicationContext(), UserProfileActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);

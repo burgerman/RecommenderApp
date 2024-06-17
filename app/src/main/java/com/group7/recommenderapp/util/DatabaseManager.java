@@ -3,6 +3,7 @@ package com.group7.recommenderapp.util;
 import android.content.Context;
 import android.util.Log;
 
+import com.couchbase.lite.Collection;
 import com.couchbase.lite.CouchbaseLite;
 import com.couchbase.lite.CouchbaseLiteException;
 import com.couchbase.lite.Database;
@@ -11,25 +12,52 @@ import com.couchbase.lite.DatabaseChangeListener;
 import com.couchbase.lite.DatabaseConfiguration;
 import com.couchbase.lite.Document;
 import com.couchbase.lite.ListenerToken;
+import com.couchbase.lite.Scope;
 
 import java.util.concurrent.Executor;
 
 public class DatabaseManager {
+
+    private static final String TAG = "DatabaseManager";
+    private static final String DB_USER = "";
     private static Database database;
     private static DatabaseManager instance = null;
     private ListenerToken listenerToken;
     public  String currentUser = null;
-    private static String dbName = "userprofile";
+    private static final String DATABASE_NAME = "userprofile";
+    private static final String USER_COLLECTION = "user_collection";
+    private static final String PROFILE_COLLECTION = "profile_collection";
+    private Collection userCollection;
+    private Collection profileCollection;
 
-    protected DatabaseManager() {
-
+    protected DatabaseManager(Context context) {
+        CouchbaseLite.init(context);
+        DatabaseConfiguration config = new DatabaseConfiguration();
+        try {
+            database = new Database(DATABASE_NAME, config);
+            userCollection = database.getDefaultScope().getCollection(USER_COLLECTION);
+            profileCollection = database.getDefaultScope().getCollection(PROFILE_COLLECTION);
+        } catch (CouchbaseLiteException e) {
+            Log.e(TAG, e.getMessage());
+        }
     }
 
-    public static DatabaseManager getSharedInstance() {
-        if (instance == null) {
-            instance = new DatabaseManager();
-        }
+    public Collection getUserCollection() {
+        return userCollection;
+    }
 
+    public Collection getProfileCollection() {
+        return profileCollection;
+    }
+
+    public static DatabaseManager getSharedInstance(Context context) {
+        if(instance == null) {
+            synchronized (DatabaseManager.class) {
+                if (instance == null) {
+                    instance = new DatabaseManager(context);
+                }
+            }
+        }
         return instance;
     }
 
@@ -37,32 +65,27 @@ public class DatabaseManager {
         return database;
     }
 
-    // tag::initCouchbaseLite[]
-    public void initCouchbaseLite(Context context) {
-        CouchbaseLite.init(context);
-    }
-    // end::initCouchbaseLite[]
 
     // tag::userProfileDocId[]
     public String getCurrentUserDocId() {
-        return "user::" + currentUser;
+        return UserUtils.generateUserDocId(currentUser);
     }
     // end::userProfileDocId[]
 
     // tag::openOrCreateDatabase[]
-    public void openOrCreateDatabaseForUser(Context context, String username)
+    public void openOrCreateDatabaseForUser(Context context, String userName)
     // end::openOrCreateDatabase[]
     {
         // tag::databaseConfiguration[]
         DatabaseConfiguration config = new DatabaseConfiguration();
-        config.setDirectory(String.format("%s/%s", context.getFilesDir(), username));
+        config.setDirectory(String.format("%s/%s", context.getFilesDir(), DB_USER));
         // end::databaseConfiguration[]
 
-        currentUser = username;
+        currentUser = userName;
 
         try {
             // tag::createDatabase[]
-            database = new Database(dbName, config);
+            database = new Database(DATABASE_NAME, config);
             // end::createDatabase[]
             registerForDatabaseChanges();
         } catch (CouchbaseLiteException e) {
@@ -76,19 +99,12 @@ public class DatabaseManager {
     {
         // tag::addDatabaseChangelistener[]
         // Add database change listener
-        listenerToken = database.addChangeListener(new DatabaseChangeListener() {
-            @Override
-            public void changed(final DatabaseChange change) {
-                if (change != null) {
-                    for(String docId : change.getDocumentIDs()) {
-                        Document doc = database.getDocument(docId);
-                        if (doc != null) {
-                            Log.i("DatabaseChangeEvent", "Document was added/updated");
-                        }
-                        else {
-
-                            Log.i("DatabaseChangeEvent","Document was deleted");
-                        }
+        listenerToken = database.addChangeListener(change -> {
+            if (change != null) {
+                for(String docId : change.getDocumentIDs()) {
+                    Document doc = database.getDocument(docId);
+                    if (doc != null) {
+                        Log.i("DatabaseChangeEvent", "Document has been inserted or updated");
                     }
                 }
             }

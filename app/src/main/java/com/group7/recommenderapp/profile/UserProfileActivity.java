@@ -120,7 +120,7 @@ public class UserProfileActivity
      */
 
     public void onLogoutTapped(View view) {
-        DatabaseManager.getSharedInstance().closeDatabaseForUser();
+        DatabaseManager.getSharedInstance(this).closeDatabaseForUser();
         Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
