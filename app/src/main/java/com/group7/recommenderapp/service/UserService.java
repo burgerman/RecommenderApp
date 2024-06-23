@@ -8,6 +8,8 @@ import com.group7.recommenderapp.entities.UserProfile;
 import com.group7.recommenderapp.util.DatabaseManager;
 import com.group7.recommenderapp.util.UserUtils;
 
+import java.util.Map;
+
 public class UserService {
 
     private UserDao userDao;
@@ -32,19 +34,31 @@ public class UserService {
         return userServiceInstance;
     }
 
-    public void createNewUser(User user) {
+    public int createNewUser(String username, String password) {
+        User user = new User();
+        if(UserUtils.isValidEmail(username)) {
+            user.setUserName(username);
+            user.setPassword(password);
+            user.setDocumentId(UserUtils.generateUserDocId(username));
+            userDao.createOrUpdateUser(user);
+        }
+        return 400;
+    }
+
+    public int authenUser(String username, String password) {
+        String userId = UserUtils.generateUserDocId(username);
+        User user = userDao.getUser(userId);
+        if(user !=null && user.getPassword().equals(password)) {
+            return 200;
+        }
+        return 400;
+    }
+
+    public void createUserProfile(Map<String, Object> userInfo) {
 
     }
 
-    public void updateUserInfo(User user) {
-
-    }
-
-    public void createUserProfile(UserProfile userProfile) {
-
-    }
-
-    public void updateUserProfile(User user) {
+    public void updateUserProfile(Map<String, Object> userInfo) {
 
     }
 
