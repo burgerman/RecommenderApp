@@ -1,13 +1,17 @@
 package com.group7.recommenderapp.service;
 
+import com.group7.recommenderapp.entities.ContentItem;
+
 import java.util.List;
 
-public interface RecommenderService {
+public interface RecommenderService<T extends ContentItem> {
 
-    public void loadModel();
+    void load();
 
-    public void unload();
+    void unload();
 
-    public List<String> rocommend(String category);
+    List<T> recommendByGenre(List<String> genres);
+
+    List<T> recommendByItem(List<T> items);
 
 }

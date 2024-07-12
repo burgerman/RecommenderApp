@@ -1,0 +1,12 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+
+xxxActivity -> RecommenderService: recommend(List<ContentItem>)
+RecommenderService -> RecommenderService: preprocess(...)
+RecommenderService ->Interpreter: runForMultipleInputsOutputs
+RecommenderService <--Interpreter: outputIds, confidences
+RecommenderService -> RecommenderService: postprocess(...)
+xxxActivity <-- RecommenderService: List<ContentItem>
+@enduml

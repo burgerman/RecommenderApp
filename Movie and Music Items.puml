@@ -1,0 +1,30 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+abstract class ContentItem
+
+
+ContentItem <|-- MovieItem
+ContentItem <|-- MusicItem
+
+
+class ContentItem{
+    public int id;
+    private String title;
+    private List<String> genres;
+    private float score;
+    private boolean isSelected;
+}
+ContentItem <|- RecommenderService
+
+class RecommenderService{
+    recommend(List<Genre>):List<ContentItem>
+    recommend(List<ContentItem>):List<ContentItem>
+    preprocess(...)
+    postprocess(...)
+}
+
+RecommenderService <|-- MovieBasedRecommender
+RecommenderService <|-- MusicBasedRecommender
+
+@enduml

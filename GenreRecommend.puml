@@ -1,0 +1,10 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+
+xxxActivity -> RecommenderService: recommend(List<Genres>, category)
+RecommenderService ->DB: fetchHottestItems(List<Genres>, category)
+RecommenderService <--DB: List<ContentItem>
+xxxActivity <-- RecommenderService: List<ContentItem>
+@enduml

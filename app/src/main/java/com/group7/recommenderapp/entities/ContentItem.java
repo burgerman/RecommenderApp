@@ -1,19 +1,42 @@
 package com.group7.recommenderapp.entities;
 
-import android.annotation.SuppressLint;
 import android.text.TextUtils;
+
+import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 import java.util.Locale;
-import java.util.StringJoiner;
+
 
 public class ContentItem {
 
+    /**
+     * Content item id
+     */
     public int id;
+    /**
+     * Content item title
+     */
     private String title;
+    /**
+     * Content item genres
+     */
     private List<String> genres;
-    private float score;
+    /**
+     * Content item score, which will be viewed as public consensus of the heat of content
+     * when it is deserialized from file, some transition in property name(count=>score) will occur
+     */
+    @SerializedName(value = "count")
+    private int score;
+    /**
+     * denote if content item is selected by user
+     */
     private boolean isSelected;
+
+    /**
+     * Content item confidence, this is inference confidence of the model, which will change with different selection pattern of the user
+     */
+    private float confidence;
 
     public static final String JOINER = " | ";
     public static final String DELIMITER = "[|]";
@@ -42,11 +65,11 @@ public class ContentItem {
         this.genres = genres;
     }
 
-    public float getScore() {
+    public int getScore() {
         return score;
     }
 
-    public void setScore(float score) {
+    public void setScore(int score) {
         this.score = score;
     }
 
@@ -58,10 +81,19 @@ public class ContentItem {
         isSelected = selected;
     }
 
+    public float getConfidence() {
+        return confidence;
+    }
+
+    public void setConfidence(float confidence) {
+        this.confidence = confidence;
+    }
     @Override
     public String toString() {
         return String.format(Locale.CANADA,
-                "Id: %d, title: %s, genres: %s, score: %.2f, selected: %s",
-                id, title, TextUtils.join(JOINER, genres), score, isSelected);
+                "Id: %d, title: %s, genres: %s, score: %d, selected: %s, confidence: %.2f",
+                id, title, TextUtils.join(JOINER, genres), score, isSelected, confidence);
     }
+
+
 }
