@@ -19,6 +19,7 @@ public final class MovieConfig {
 
     public static final String FEATURE_MOVIE = "movieFeature";
     public static final String FEATURE_GENRE = "genreFeature";
+    public static final String FEATURE_RATING = "ratingFeature";
 
     public static class Feature {
         public String name;

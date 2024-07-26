@@ -109,6 +109,21 @@ public class MovieRecommender implements RecommenderService<MovieItem> {
         return inputIds;
     }
 
+    float[] preprocessRatings(List<MovieItem> selectedMovies, int length) {
+        float[] inputRatings = new float[length];
+        Arrays.fill(inputRatings, config.pad); // Fill inputIds with the default.
+        int i = 0;
+        for (MovieItem item : selectedMovies) {
+            if (i >= inputRatings.length) {
+                break;
+            }
+            // all selected movies wil be assigned rating to 1.0, it can be extended with more specific rating on UI if needed.
+            inputRatings[i] = 1.0f;
+            ++i;
+        }
+        return inputRatings;
+    }
+
     int[] preprocessGenres(List<MovieItem> selectedMovies, int length) {
         int[] inputGenres = new int[length];
         Arrays.fill(inputGenres, config.unknownGenre);
@@ -140,7 +155,9 @@ public class MovieRecommender implements RecommenderService<MovieItem> {
                 inputs.add(preprocessIds(selectedMovies, feature.inputLength));
             } else if (MovieConfig.FEATURE_GENRE.equals(feature.name)) {
                 inputs.add(preprocessGenres(selectedMovies, feature.inputLength));
-            } else {
+            } else if(MovieConfig.FEATURE_RATING.equals(feature.name)) {
+                inputs.add(preprocessRatings(selectedMovies, feature.inputLength));
+            }else {
                 Log.e(TAG, String.format("Invalid feature: %s", feature.name));
             }
         }
