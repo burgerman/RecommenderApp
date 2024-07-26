@@ -22,6 +22,7 @@ public final class MovieConfig {
 
     public static final String FEATURE_MOVIE = "movieFeature";
     public static final String FEATURE_GENRE = "genreFeature";
+    public static final String FEATURE_RATING = "ratingFeature";
 
     /** Feature of the model. */
     public static class Feature {

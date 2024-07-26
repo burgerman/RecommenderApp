@@ -36,7 +36,7 @@ public class RecommenderServiceTest {
 //    @Mock
 //    private static Resources mockResources;;
 
-    private static final String CONFIG_PATH = "config.json";  // Default config path in assets.
+    private static final String CONFIG_PATH = "movie_config.json";  // Default config path in assets.
     private static final String TAG = "RecommenderServiceUnitTest";
     private static MovieConfig config;
     private static RecommenderService movieRecommender;
