@@ -7,14 +7,14 @@ import com.couchbase.lite.Collection;
 import com.couchbase.lite.CouchbaseLite;
 import com.couchbase.lite.CouchbaseLiteException;
 import com.couchbase.lite.Database;
-import com.couchbase.lite.DatabaseChange;
 import com.couchbase.lite.DatabaseChangeListener;
 import com.couchbase.lite.DatabaseConfiguration;
 import com.couchbase.lite.Document;
 import com.couchbase.lite.ListenerToken;
-import com.couchbase.lite.Scope;
+import com.couchbase.lite.MutableDocument;
+import com.couchbase.lite.MutableArray;
 
-import java.util.concurrent.Executor;
+import java.util.List;
 
 public class DatabaseManager {
 
@@ -23,10 +23,12 @@ public class DatabaseManager {
     private static Database database;
     private static DatabaseManager instance = null;
     private ListenerToken listenerToken;
-    public  String currentUser = null;
+    public String currentUser = null;
     private static final String DATABASE_NAME = "userprofile";
     private static final String USER_COLLECTION = "user_collection";
     private static final String PROFILE_COLLECTION = "profile_collection";
+    private static final String PREFERENCE_COLLECTION = "preference_collection";
+    private Collection preferenceCollection;
     private Collection userCollection;
     private Collection profileCollection;
 
@@ -37,6 +39,7 @@ public class DatabaseManager {
             database = new Database(DATABASE_NAME, config);
             userCollection = database.getDefaultScope().getCollection(USER_COLLECTION);
             profileCollection = database.getDefaultScope().getCollection(PROFILE_COLLECTION);
+            preferenceCollection = database.getDefaultScope().getCollection(PREFERENCE_COLLECTION);
         } catch (CouchbaseLiteException e) {
             Log.e(TAG, e.getMessage());
         }
@@ -50,8 +53,12 @@ public class DatabaseManager {
         return profileCollection;
     }
 
+    public Collection getPreferenceCollection() {
+        return preferenceCollection;
+    }
+
     public static DatabaseManager getSharedInstance(Context context) {
-        if(instance == null) {
+        if (instance == null) {
             synchronized (DatabaseManager.class) {
                 if (instance == null) {
                     instance = new DatabaseManager(context);
@@ -65,43 +72,28 @@ public class DatabaseManager {
         return database;
     }
 
-
-    // tag::userProfileDocId[]
     public String getCurrentUserDocId() {
         return UserUtils.generateUserDocId(currentUser);
     }
-    // end::userProfileDocId[]
 
-    // tag::openOrCreateDatabase[]
-    public void openOrCreateDatabaseForUser(Context context, String userName)
-    // end::openOrCreateDatabase[]
-    {
-        // tag::databaseConfiguration[]
+    public void openOrCreateDatabaseForUser(Context context, String userName) {
         DatabaseConfiguration config = new DatabaseConfiguration();
         config.setDirectory(String.format("%s/%s", context.getFilesDir(), DB_USER));
-        // end::databaseConfiguration[]
 
         currentUser = userName;
 
         try {
-            // tag::createDatabase[]
             database = new Database(DATABASE_NAME, config);
-            // end::createDatabase[]
             registerForDatabaseChanges();
         } catch (CouchbaseLiteException e) {
             e.printStackTrace();
         }
     }
 
-    // tag::registerForDatabaseChanges[]
-    private void registerForDatabaseChanges()
-    // end::registerForDatabaseChanges[]
-    {
-        // tag::addDatabaseChangelistener[]
-        // Add database change listener
+    private void registerForDatabaseChanges() {
         listenerToken = database.addChangeListener(change -> {
             if (change != null) {
-                for(String docId : change.getDocumentIDs()) {
+                for (String docId : change.getDocumentIDs()) {
                     Document doc = database.getDocument(docId);
                     if (doc != null) {
                         Log.i("DatabaseChangeEvent", "Document has been inserted or updated");
@@ -109,19 +101,13 @@ public class DatabaseManager {
                 }
             }
         });
-        // end::addDatabaseChangelistener[]
     }
 
-    // tag::closeDatabaseForUser[]
-    public void closeDatabaseForUser()
-    // end::closeDatabaseForUser[]
-    {
+    public void closeDatabaseForUser() {
         try {
             if (database != null) {
                 deregisterForDatabaseChanges();
-                // tag::closeDatabase[]
                 database.close();
-                // end::closeDatabase[]
                 database = null;
             }
         } catch (CouchbaseLiteException e) {
@@ -129,14 +115,59 @@ public class DatabaseManager {
         }
     }
 
-    // tag::deregisterForDatabaseChanges[]
-    private void deregisterForDatabaseChanges()
-    // end::deregisterForDatabaseChanges[]
-    {
+    private void deregisterForDatabaseChanges() {
         if (listenerToken != null) {
-            // tag::removedbchangelistener[]
             database.removeChangeListener(listenerToken);
-            // end::removedbchangelistener[]
+        }
+    }
+
+    public void saveMoviePreferences(List<String> moviePreferences) {
+        if (currentUser == null) {
+            Log.e(TAG, "No current user set. Cannot save movie preferences.");
+            return;
+        }
+
+        String docId = "movie_preferences_" + getCurrentUserDocId();
+        MutableDocument document = new MutableDocument(docId);
+
+        // Convert List<String> to com.couchbase.lite.Array
+        MutableArray array = new MutableArray();
+        for (String preference : moviePreferences) {
+            array.addString(preference);
+        }
+
+        document.setArray("preferences", array);
+
+        try {
+            preferenceCollection.save(document);
+            Log.i(TAG, "Movie preferences saved successfully for user: " + currentUser);
+        } catch (CouchbaseLiteException e) {
+            Log.e(TAG, "Error saving movie preferences: " + e.getMessage());
+        }
+    }
+
+    public void saveMusicPreferences(List<String> musicPreferences) {
+        if (currentUser == null) {
+            Log.e(TAG, "No current user set. Cannot save music preferences.");
+            return;
+        }
+
+        String docId = "music_preferences_" + getCurrentUserDocId();
+        MutableDocument document = new MutableDocument(docId);
+
+        // Convert List<String> to com.couchbase.lite.Array
+        MutableArray array = new MutableArray();
+        for (String preference : musicPreferences) {
+            array.addString(preference);
+        }
+
+        document.setArray("preferences", array);
+
+        try {
+            preferenceCollection.save(document);
+            Log.i(TAG, "Music preferences saved successfully for user: " + currentUser);
+        } catch (CouchbaseLiteException e) {
+            Log.e(TAG, "Error saving music preferences: " + e.getMessage());
         }
     }
 }

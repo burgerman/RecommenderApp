@@ -1,6 +1,5 @@
 package com.group7.recommenderapp.profile;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -22,7 +21,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.couchbase.lite.Blob;
 import com.group7.recommenderapp.R;
-import com.group7.recommenderapp.login.LoginActivity;
+import com.group7.recommenderapp.ui.login.LoginActivity;
 import com.group7.recommenderapp.util.DatabaseManager;
 
 import java.io.ByteArrayOutputStream;

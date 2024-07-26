@@ -6,14 +6,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-    tools:context=".login.LoginActivity">
+    tools:context=".ui.login.LoginActivity">
 
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_centerHorizontal="true"
         android:orientation="vertical"
+        android:gravity="center"
         android:layout_marginTop="20dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -32,12 +32,14 @@
             android:orientation="vertical"
             android:layout_marginTop="25dp"
             android:layout_marginBottom="25dp">
+
             <EditText
                 android:id="@+id/usernameInput"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:backgroundTint="@color/colorPrimary"
-                android:hint="@string/username" />
+                android:hint="@string/username_or_email" />
+
             <EditText
                 android:id="@+id/passwordInput"
                 android:layout_width="match_parent"
@@ -50,14 +52,26 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical|center_horizontal"
+            android:layout_gravity="center"
             android:backgroundTint="@color/colorPrimary"
             android:textColor="@color/white"
             android:layout_marginTop="@dimen/fab_margin"
             android:onClick="onLoginTapped"
             android:id="@+id/loginButton"
             android:padding="@dimen/fab_margin"
-            android:text="@string/sign_in"/>
+            android:text="@string/sign_in" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:backgroundTint="@color/colorPrimary"
+            android:textColor="@color/white"
+            android:layout_marginTop="@dimen/fab_margin"
+            android:onClick="onSignUpTapped"
+            android:id="@+id/signUpButton"
+            android:padding="@dimen/fab_margin"
+            android:text="@string/sign_up" />
 
     </LinearLayout>
 

@@ -1,4 +1,4 @@
-package com.group7.recommenderapp.main;
+package com.group7.recommenderapp.ui.main;
 
 import androidx.appcompat.app.AppCompatActivity;
 
