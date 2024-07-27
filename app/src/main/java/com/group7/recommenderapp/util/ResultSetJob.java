@@ -22,6 +22,9 @@ public class ResultSetJob implements Callable<List<ContentItem>> {
 
     @Override
     public List<ContentItem> call() throws Exception {
-        return resultSet.getTopK();
+        if(k!=ResultSet.DEFAULT_TOPK) {
+            return resultSet.getTopK();
+        }
+        return resultSet.getTopK(k);
     }
 }
