@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 
 public class ResultSet {
 
-    public static final int DEFAULT_TOPK = 5;
+    public static final int DEFAULT_TOPK = 3;
     private String contentClass;
     private List<ContentItem> itemset;
     private List<ContentItem> topK;
@@ -29,7 +29,8 @@ public class ResultSet {
 
     public List<ContentItem> getTopK(int k) {
         if(topK == null || k != DEFAULT_TOPK) {
-            itemset.sort(Comparator.comparing(ContentItem::getScore, Comparator.reverseOrder()));
+            itemset.sort(Comparator.comparing(ContentItem::getScore, Comparator.reverseOrder())
+                    .thenComparing(ContentItem::getConfidence, Comparator.reverseOrder()));
             this.topK = itemset.stream().limit(k).collect(Collectors.toList());
         }
         return topK;
@@ -37,7 +38,8 @@ public class ResultSet {
 
     public List<ContentItem> getTopK() {
         if(topK == null) {
-            itemset.sort(Comparator.comparing(ContentItem::getScore, Comparator.reverseOrder()));
+            itemset.sort(Comparator.comparing(ContentItem::getScore, Comparator.reverseOrder())
+                    .thenComparing(ContentItem::getConfidence, Comparator.reverseOrder()));
             this.topK = itemset.stream().limit(DEFAULT_TOPK).collect(Collectors.toList());
         }
         return topK;
