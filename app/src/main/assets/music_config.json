@@ -1,0 +1,14 @@
+{
+  "model": "movie_trained.tflite",
+  "inputs": [
+    {"name": "movieFeature", "index": 2, "inputLength": 10},
+    {"name": "genreFeature", "index": 0, "inputLength": 32},
+    {"name": "ratingFeature", "index": 1, "inputLength": 10}
+  ],
+  "movieList": "sorted_movie_vocab.json",
+  "genreList": "movie_genre_vocab.txt",
+  "topK": 10,
+  "outputLength": 10,
+  "outputIdsIndex": 1,
+  "outputScoresIndex": 0
+}

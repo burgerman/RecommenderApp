@@ -1,7 +1,6 @@
 package com.group7.recommenderapp.entities;
 
 public class MovieItem extends ContentItem{
-
     private String director;
 
     public String getDirector() {
