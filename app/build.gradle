@@ -8,7 +8,7 @@ android {
 
     defaultConfig {
         applicationId "com.group7.recommenderapp"
-        minSdk 24
+        minSdk 28
         targetSdk 34
         versionCode 1
         versionName "1.0"
@@ -42,9 +42,11 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.9'
     implementation("com.google.guava:guava:33.2.1-android")
     testImplementation 'junit:junit:4.13.2'
-
+    testImplementation 'org.mockito:mockito-core:3.12.4'
+    testImplementation 'org.mockito:mockito-inline:3.12.4'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test:runner:1.5.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
     androidTestImplementation 'com.microsoft.appcenter:espresso-test-extension:1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-intents:3.6.1'
 }
