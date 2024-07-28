@@ -1,9 +1,11 @@
 package com.group7.recommenderapp.service;
 
 import android.content.Context;
+import android.util.Log;
 import com.group7.recommenderapp.dao.UserDao;
 import com.group7.recommenderapp.dao.UserProfileDao;
 import com.group7.recommenderapp.entities.User;
+import com.group7.recommenderapp.entities.UserPreference;
 import com.group7.recommenderapp.entities.UserProfile;
 import com.group7.recommenderapp.util.DatabaseManager;
 import com.group7.recommenderapp.util.UserUtils;
@@ -35,30 +37,53 @@ public class UserService {
     }
 
     public int createNewUser(String username, String password) {
-        User user = new User();
         if(UserUtils.isValidEmail(username)) {
-            user.setUserName(username);
-            user.setPassword(password);
-            user.setDocumentId(UserUtils.generateUserDocId(username));
-            userDao.createOrUpdateUser(user);
+            int res = authenUser(username, password);
+            if(res == 400) {
+                // user not found in DB
+                User user = new User();
+                user.setUserName(username);
+                user.setPassword(password);
+                user.setDocumentId(UserUtils.generateUserDocId(username));
+                if (userDao.createOrUpdateUser(user)) return 200;
+            } else if (res == 200) {
+                // user exists, auth passed
+                return 200;
+            } else {
+                // user exists, password not correct
+                return 300;
+            }
         }
         return 400;
     }
 
     public int authenUser(String username, String password) {
-        String userId = UserUtils.generateUserDocId(username);
-        User user = userDao.getUser(userId);
-        if(user !=null && user.getPassword().equals(password)) {
-            return 200;
+        User user = selectUser(username);
+        if(user !=null) {
+            if(UserUtils.isCorrectPassword(user, password)){
+                return 200;
+            }
+            return 300;
         }
         return 400;
     }
 
-    public void createUserProfile(Map<String, Object> userInfo) {
-
-    }
-
-    public void updateUserProfile(Map<String, Object> userInfo) {
+    public void createOrUpdateUserProfile(Map<String, Object> userInfo) {
+        if(userInfo.get("username")!=null) {
+            String userName = (String) userInfo.get("username");
+            String userDocID = UserUtils.generateUserDocId(userName);
+            UserProfile userProfile = new UserProfile(UserUtils.generateUserProfileDocId(userName, userDocID));
+            userProfile.setAge(userInfo.get("age")!= null? (Integer) userInfo.get("age"):0);
+            userProfile.setGender(userInfo.get("gender")!=null? (String) userInfo.get("gender"):"");
+            UserPreference userPreference = new UserPreference((String) userInfo.get("class1"));
+            userPreference.setPreferredLanguage(userInfo.get("language")!=null?(String) userInfo.get("language"):"");
+            userPreference.setClass2(userInfo.get("class2")!=null?(String) userInfo.get("class2"):"");
+            userPreference.setPreferenceDict(userInfo.get("preferences")!=null?(Map<String, Object>) userInfo.get("preferences"):null);
+            userProfile.setPreferences(userPreference);
+            userProfileDao.createOrUpdateProfile(userProfile);
+        } else {
+            Log.i("UserService createOrUpdateUserProfile", "User Name Not Found");
+        }
 
     }
 
