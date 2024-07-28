@@ -4,6 +4,7 @@ import android.content.Context;
 import com.group7.recommenderapp.entities.ContentItem;
 import com.group7.recommenderapp.service.MovieConfig;
 import com.group7.recommenderapp.service.MovieRecommender;
+import com.group7.recommenderapp.service.MusicConfig;
 import com.group7.recommenderapp.service.RecommenderService;
 import com.group7.recommenderapp.service.MusicRecommender;
 import java.util.List;

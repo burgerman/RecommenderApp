@@ -2,6 +2,7 @@ package com.group7.recommenderapp.ui.music;
 
 import android.content.Context;
 import com.group7.recommenderapp.entities.MusicItem;
+import com.group7.recommenderapp.service.MusicConfig;
 import com.group7.recommenderapp.service.MusicRecommender;
 import com.group7.recommenderapp.service.RecommenderService;
 import java.util.List;
@@ -14,7 +15,9 @@ public class MusicPresenter implements MusicContract.Presenter {
     public MusicPresenter(MusicContract.View view, Context context) {
         this.view = view;
         this.context = context;
-        this.musicRecommender = MusicRecommender.getInstance(context);
+        // Initialize MusicRecommender
+        MusicConfig config = new MusicConfig();
+        this.musicRecommender = MusicRecommender.getInstance(context, config);
     }
 
     @Override
