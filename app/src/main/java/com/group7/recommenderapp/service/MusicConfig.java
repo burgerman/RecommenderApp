@@ -8,7 +8,7 @@ import java.util.List;
 /** Config for music recommendation app. */
 public final class MusicConfig {
     private static final String TAG = "MusicConfig";
-    private static final String DEFAULT_MODEL_PATH = "music_recommendation_model.tflite";
+    private static final String DEFAULT_MODEL_PATH = "music_trained.tflite";
     private static final String DEFAULT_MUSIC_LIST_PATH = "sorted_music_vocab.json";
     private static final String DEFAULT_GENRE_LIST_PATH = "music_genre_vocab.txt";
     private static final int DEFAULT_OUTPUT_LENGTH = 100;

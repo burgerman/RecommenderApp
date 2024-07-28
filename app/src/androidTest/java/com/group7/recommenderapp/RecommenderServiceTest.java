@@ -14,6 +14,7 @@ import com.group7.recommenderapp.service.MovieConfig;
 import com.group7.recommenderapp.service.RecommenderService;
 import com.group7.recommenderapp.util.FileUtil;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 //import org.mockito.Mock;
@@ -31,16 +32,10 @@ import java.util.Random;
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
 public class RecommenderServiceTest {
-//    @Mock
-//    private static Context mockContext;
-//    @Mock
-//    private static Resources mockResources;;
-
     private static final String CONFIG_PATH = "movie_config.json";  // Default config path in assets.
     private static final String TAG = "RecommenderServiceUnitTest";
     private static MovieConfig config;
     private static RecommenderService movieRecommender;
-    private static RecommenderService musicRecommender;
     private static final int RANDOM_BOUNDS = 10;
     private Context ctx;
     private final Random rand = new Random();
@@ -56,9 +51,11 @@ public class RecommenderServiceTest {
         }
         movieRecommender = MovieRecommender.getInstance(ctx, config);
         movieRecommender.load();
-//        musicRecommender = MusicBasedRecommender.getInstance(ctx);
-//        musicRecommender.loadModel();
+    }
 
+    @After
+    public void tearDown() {
+        movieRecommender.unload();
     }
 
     @Test

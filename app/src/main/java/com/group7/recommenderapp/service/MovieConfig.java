@@ -9,7 +9,7 @@ import java.util.List;
 /** Config for recommendation app. */
 public final class MovieConfig {
     private static final String TAG = "Config";
-    private static final String DEFAULT_MODEL_PATH = "recommendation_rnn_i10o100.tflite";
+    private static final String DEFAULT_MODEL_PATH = "movie_trained.tflite";
     private static final String DEFAULT_MOVIE_LIST_PATH = "sorted_movie_vocab.json";
     private static final String DEFAULT_GENRE_LIST_PATH = "movie_genre_vocab.txt";
     private static final int DEFAULT_OUTPUT_LENGTH = 100;
