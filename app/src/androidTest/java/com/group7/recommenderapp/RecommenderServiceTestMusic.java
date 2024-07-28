@@ -14,6 +14,7 @@ import com.group7.recommenderapp.service.MusicConfig;
 import com.group7.recommenderapp.service.RecommenderService;
 import com.group7.recommenderapp.util.FileUtilMusic;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 //import org.mockito.Mock;
@@ -31,10 +32,6 @@ import java.util.Random;
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
 public class RecommenderServiceTestMusic {
-//    @Mock
-//    private static Context mockContext;
-//    @Mock
-//    private static Resources mockResources;
 
     private static final String CONFIG_PATH = "music_config.json";  // Default config path in assets.
     private static final String TAG = "RecommenderServiceUnitTest";
@@ -55,9 +52,11 @@ public class RecommenderServiceTestMusic {
         }
         musicRecommender = MusicRecommender.getInstance(ctx, config);
         musicRecommender.load();
-//        musicRecommender = MusicBasedRecommender.getInstance(ctx);
-//        musicRecommender.loadModel();
+    }
 
+    @After
+    public void tearDown() {
+        musicRecommender.unload();
     }
 
     @Test
