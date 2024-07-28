@@ -1,4 +1,4 @@
-package com.group7.recommenderapp.ui.movie;
+package com.group7.recommenderapp.ui.music;
 
 import android.os.Bundle;
 import android.view.Menu;
@@ -8,31 +8,31 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.group7.recommenderapp.R;
-import com.group7.recommenderapp.fragments.MovieFragment;
+import com.group7.recommenderapp.fragments.MusicFragment;
 
-public class MovieActivity extends AppCompatActivity {
+public class MusicActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_movie);
+        setContentView(R.layout.activity_music);
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.movieContainer, new MovieFragment())
+                    .replace(R.id.musicContainer, new MusicFragment())
                     .commit();
         }
 
-        FloatingActionButton addMovieButton = findViewById(R.id.addMovieButton);
-        addMovieButton.setOnClickListener(v -> {
-            // Handle add movie action
-            Toast.makeText(this, "Add movie clicked", Toast.LENGTH_SHORT).show();
+        FloatingActionButton addMusicButton = findViewById(R.id.addMusicButton);
+        addMusicButton.setOnClickListener(v -> {
+            // Handle add music action
+            Toast.makeText(this, "Add music clicked", Toast.LENGTH_SHORT).show();
         });
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.movie_menu, menu);
+        getMenuInflater().inflate(R.menu.music_menu, menu);
 
         MenuItem searchItem = menu.findItem(R.id.action_search);
         SearchView searchView = (SearchView) searchItem.getActionView();
@@ -55,18 +55,19 @@ public class MovieActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_details:
-                // Handle details action
-                return true;
-            case R.id.action_delete:
-                // Handle delete action
-                return true;
-            case R.id.action_favorites:
-                // Handle view favorites action
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        int itemId = item.getItemId();
+        if (itemId == R.id.action_details) {
+            // Handle details action
+            return true;
+        } else if (itemId == R.id.action_delete) {
+            // Handle delete action
+            return true;
+        } else if (itemId == R.id.action_favorites) {
+            // Handle view favorites action
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
         }
     }
+
 }

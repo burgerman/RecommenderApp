@@ -2,26 +2,14 @@ package com.group7.recommenderapp.service;
 
 import android.content.Context;
 import android.util.Log;
-
 import androidx.annotation.WorkerThread;
-
 import com.group7.recommenderapp.util.FileUtil;
 import com.group7.recommenderapp.entities.MovieItem;
-
 import org.tensorflow.lite.Interpreter;
-
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
-
 
 public class MovieRecommender implements RecommenderService<MovieItem> {
     private static final String TAG = "MovieBasedRecommender";
@@ -70,7 +58,7 @@ public class MovieRecommender implements RecommenderService<MovieItem> {
             Log.e(TAG, e.getMessage());
         }
     }
-    /** Load recommendation candidate list. */
+
     @WorkerThread
     private synchronized void loadCandidateList() {
         try {
@@ -87,7 +75,6 @@ public class MovieRecommender implements RecommenderService<MovieItem> {
         }
     }
 
-    /** Load movie genre list. */
     @WorkerThread
     private synchronized void loadGenreList() {
         try {
@@ -110,7 +97,7 @@ public class MovieRecommender implements RecommenderService<MovieItem> {
 
     int[] preprocessIds(List<MovieItem> selectedMovies, int length) {
         int[] inputIds = new int[length];
-        Arrays.fill(inputIds, config.pad); // Fill inputIds with the default.
+        Arrays.fill(inputIds, config.pad);
         int i = 0;
         for (MovieItem item : selectedMovies) {
             if (i >= inputIds.length) {
@@ -123,9 +110,8 @@ public class MovieRecommender implements RecommenderService<MovieItem> {
     }
 
     int[] preprocessGenres(List<MovieItem> selectedMovies, int length) {
-        // Fill inputGenres.
         int[] inputGenres = new int[length];
-        Arrays.fill(inputGenres, config.unknownGenre); // Fill inputGenres with the default.
+        Arrays.fill(inputGenres, config.unknownGenre);
         int i = 0;
         for (MovieItem item : selectedMovies) {
             if (i >= inputGenres.length) {
@@ -142,12 +128,10 @@ public class MovieRecommender implements RecommenderService<MovieItem> {
         return inputGenres;
     }
 
-    /** Given a list of selected items, preprocess to get tflite input. */
     @WorkerThread
     synchronized Object[] preprocess(List<MovieItem> selectedMovies) {
         List<Object> inputs = new ArrayList<>();
 
-        // Sort features.
         List<MovieConfig.Feature> sortedFeatures = new ArrayList<>(config.inputs);
         Collections.sort(sortedFeatures, (MovieConfig.Feature a, MovieConfig.Feature b) -> Integer.compare(a.index, b.index));
 
@@ -163,13 +147,11 @@ public class MovieRecommender implements RecommenderService<MovieItem> {
         return inputs.toArray();
     }
 
-    /** Postprocess to gets results from tflite inference. */
     @WorkerThread
     synchronized List<MovieItem> postprocess(
             int[] outputIds, float[] confidences, List<MovieItem> selectedMovies) {
         final ArrayList<MovieItem> results = new ArrayList<>();
 
-        // Add recommendation results. Filter null or contained items.
         for (int i = 0; i < outputIds.length; i++) {
             if (results.size() >= config.topK) {
                 Log.v(TAG, String.format("Selected top K: %d. Ignore the rest.", config.topK));
@@ -187,7 +169,6 @@ public class MovieRecommender implements RecommenderService<MovieItem> {
                 continue;
             }
             item.setConfidence(confidences[i]);
-//            MovieItem result = new ResultItem(id, item, confidences[i]);
             results.add(item);
             Log.v(TAG, String.format("Inference output[%d]. Result: %s", i, item));
         }
@@ -197,23 +178,19 @@ public class MovieRecommender implements RecommenderService<MovieItem> {
 
     @Override
     public List<MovieItem> recommendByGenre(List<String> genres) {
-        // read movie items from the list
         Collection<MovieItem> items = candidates.values();
 
-        // filter on the items with overlapping genres and score(public voting)
         List<MovieItem> result = items.stream()
                 .filter(p->p.getGenres().stream().anyMatch(genres::contains))
                 .sorted(Comparator.comparing(MovieItem::getScore).reversed())
                 .collect(Collectors.toList());
-        // return the topk list of filtered and
-        return result.subList(0, config.topK);
+        return result.subList(0, Math.min(result.size(), config.topK));
     }
 
     @Override
     public List<MovieItem> recommendByItem(List<MovieItem> selectedMovies) {
         Object[] inputs = preprocess(selectedMovies);
 
-        // Run inference.
         int[] outputIds = new int[config.outputLength];
         float[] confidences = new float[config.outputLength];
         Map<Integer, Object> outputs = new HashMap<>();

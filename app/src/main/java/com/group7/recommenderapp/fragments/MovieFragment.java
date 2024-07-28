@@ -12,16 +12,18 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.group7.recommenderapp.R;
-import com.group7.recommenderapp.entities.ContentItem;
-import com.group7.recommenderapp.ui.home.HomeContract;
-import com.group7.recommenderapp.ui.home.HomePresenter;
+import com.group7.recommenderapp.entities.MovieItem;
+import com.group7.recommenderapp.ui.movie.MovieAdapter;
+import com.group7.recommenderapp.ui.movie.MovieContract;
+import com.group7.recommenderapp.ui.movie.MoviePresenter;
+import java.util.ArrayList;
 import java.util.List;
 
-public class MovieFragment extends Fragment implements HomeContract.View {
+public class MovieFragment extends Fragment implements MovieContract.View {
 
     private RecyclerView recyclerView;
     private ProgressBar progressBar;
-    private HomeContract.Presenter presenter;
+    private MovieContract.Presenter presenter;
     private MovieAdapter movieAdapter;
 
     @Nullable
@@ -36,20 +38,20 @@ public class MovieFragment extends Fragment implements HomeContract.View {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        presenter = new HomePresenter(this, requireContext());
+        presenter = new MoviePresenter(this, requireContext());
         setupRecyclerView();
-        presenter.loadRecommendedContent();
+        presenter.loadMovies();
     }
 
     private void setupRecyclerView() {
-        movieAdapter = new MovieAdapter();
+        movieAdapter = new MovieAdapter(new ArrayList<>(), movie -> presenter.onMovieItemClicked(movie));
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(movieAdapter);
     }
 
     @Override
-    public void showRecommendedContent(List<ContentItem> content) {
-        movieAdapter.setContentList(content);
+    public void showMovies(List<MovieItem> movies) {
+        movieAdapter.setMovies(movies);
     }
 
     @Override

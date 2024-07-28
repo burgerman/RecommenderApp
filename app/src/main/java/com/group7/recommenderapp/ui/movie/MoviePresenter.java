@@ -4,17 +4,18 @@ import android.content.Context;
 import com.group7.recommenderapp.entities.MovieItem;
 import com.group7.recommenderapp.service.MovieConfig;
 import com.group7.recommenderapp.service.MovieRecommender;
+import com.group7.recommenderapp.service.RecommenderService;
 import java.util.List;
 
 public class MoviePresenter implements MovieContract.Presenter {
     private final MovieContract.View view;
     private final Context context;
-    private final MovieRecommender movieRecommender;
+    private final RecommenderService<MovieItem> movieRecommender;
 
     public MoviePresenter(MovieContract.View view, Context context) {
         this.view = view;
         this.context = context;
-        this.movieRecommender = (MovieRecommender) MovieRecommender.getInstance(context, new MovieConfig());
+        this.movieRecommender = MovieRecommender.getInstance(context, new MovieConfig());
     }
 
     @Override

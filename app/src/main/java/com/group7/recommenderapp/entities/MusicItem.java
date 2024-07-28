@@ -1,7 +1,14 @@
 package com.group7.recommenderapp.entities;
 
-public class MusicItem extends ContentItem{
+import java.util.List;
+
+public class MusicItem extends ContentItem {
     private String artist;
+
+    public MusicItem(int id, String title, List<String> genres, int score, String artist) {
+        super(id, title, genres, score);
+        this.artist = artist;
+    }
 
     public String getArtist() {
         return artist;

@@ -1,13 +1,11 @@
 package com.group7.recommenderapp.entities;
 
-import java.util.List;
 import java.util.Map;
 
 public class UserPreference {
     private String preferredLanguage;
     private String class1;
     private String class2;
-    // out key - class, inner key - category, value - content list
     private Map<String, Object> preferenceDict;
 
     public UserPreference(String class1) {

@@ -11,34 +11,39 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
-
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import com.couchbase.lite.Blob;
 import com.group7.recommenderapp.R;
 import com.group7.recommenderapp.ui.login.LoginActivity;
 import com.group7.recommenderapp.util.DatabaseManager;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-public class UserProfileActivity
-        extends AppCompatActivity
-        implements UserProfileContract.View {
+public class UserProfileActivity extends AppCompatActivity implements UserProfileContract.View {
 
     private UserProfileContract.UserActionsListener mActionListener;
 
+    TextView uniqueIdText;
     EditText nameInput;
-    EditText emailInput;
-    EditText addressInput;
+    EditText ageInput;
+    EditText genderInput;
+    TextView emailInput;
+    TextView preferencesText;
+    RecyclerView likedItemsRecyclerView;
     ImageView imageView;
+
+    private LikedItemsAdapter likedItemsAdapter;
 
     ActivityResultLauncher<Intent> mainActivityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -47,23 +52,16 @@ public class UserProfileActivity
                 public void onActivityResult(ActivityResult result) {
                     int resultCode = result.getResultCode();
                     Intent data = result.getData();
-                    switch (resultCode)
-                    {
-                        default:
-                        {
-                            if (data != null) {
-                                Uri selectedImage = data.getData();
-                                if (selectedImage != null) {
-                                    try {
-                                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImage);
-                                        imageView.setImageBitmap(bitmap);
-                                    } catch (IOException ex) {
-                                        Log.i("SelectPhoto", ex.getMessage());
-                                    }
-                                }
+                    if (resultCode == RESULT_OK && data != null) {
+                        Uri selectedImage = data.getData();
+                        if (selectedImage != null) {
+                            try {
+                                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImage);
+                                imageView.setImageBitmap(bitmap);
+                            } catch (IOException ex) {
+                                Log.i("SelectPhoto", ex.getMessage());
                             }
                         }
-                        break;
                     }
                 }
             });
@@ -73,22 +71,27 @@ public class UserProfileActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
 
+        uniqueIdText = findViewById(R.id.uniqueIdText);
         nameInput = findViewById(R.id.nameInput);
+        ageInput = findViewById(R.id.ageInput);
+        genderInput = findViewById(R.id.genderInput);
         emailInput = findViewById(R.id.emailInput);
-        addressInput = findViewById(R.id.addressInput);
+        preferencesText = findViewById(R.id.preferencesText);
+        likedItemsRecyclerView = findViewById(R.id.likedItemsRecyclerView);
         imageView = findViewById(R.id.imageView);
+
+        setupLikedItemsRecyclerView();
 
         mActionListener = new UserProfilePresenter(this);
 
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                mActionListener.fetchProfile();
-            }
-        });
+        runOnUiThread(() -> mActionListener.fetchProfile());
     }
 
-    public static final int PICK_IMAGE = 1;
+    private void setupLikedItemsRecyclerView() {
+        likedItemsAdapter = new LikedItemsAdapter();
+        likedItemsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        likedItemsRecyclerView.setAdapter(likedItemsAdapter);
+    }
 
     public void onUploadPhotoTapped(View view) {
         Intent intent = new Intent();
@@ -96,27 +99,6 @@ public class UserProfileActivity
         intent.setAction(Intent.ACTION_GET_CONTENT);
         mainActivityResultLauncher.launch(Intent.createChooser(intent, "Select Picture"));
     }
-
-    /*
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == PICK_IMAGE && resultCode == Activity.RESULT_OK) {
-            if (data != null) {
-                Uri selectedImage = data.getData();
-
-                try {
-                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImage);
-                    imageView.setImageBitmap(bitmap);
-                } catch (IOException ex) {
-                    Log.i("SelectPhoto", ex.getMessage());
-                }
-            }
-        }
-    }
-     */
 
     public void onLogoutTapped(View view) {
         DatabaseManager.getSharedInstance(this).closeDatabaseForUser();
@@ -126,50 +108,49 @@ public class UserProfileActivity
     }
 
     public void onSaveTapped(View view) {
-        // tag::userprofile[]
         Map<String, Object> profile = new HashMap<>();
         profile.put("name", nameInput.getText().toString());
-        profile.put("email", emailInput.getText().toString());
-        profile.put("address", addressInput.getText().toString());
+        profile.put("age", Integer.parseInt(ageInput.getText().toString()));
+        profile.put("gender", genderInput.getText().toString());
 
         byte[] imageViewBytes = getImageViewBytes();
-
         if (imageViewBytes != null) {
-            profile.put("imageData", new com.couchbase.lite.Blob("image/jpeg", imageViewBytes));
+            profile.put("imageData", new Blob("image/jpeg", imageViewBytes));
         }
-        // end::userprofile[]
 
         mActionListener.saveProfile(profile);
-
         Toast.makeText(this, "Successfully updated profile!", Toast.LENGTH_SHORT).show();
     }
 
     private byte[] getImageViewBytes() {
         byte[] imageBytes = null;
-
         BitmapDrawable bmDrawable = (BitmapDrawable) imageView.getDrawable();
-
         if (bmDrawable != null) {
             Bitmap bitmap = bmDrawable.getBitmap();
-
             if (bitmap != null) {
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
                 imageBytes = baos.toByteArray();
             }
         }
-
         return imageBytes;
     }
 
     @Override
     public void showProfile(Map<String, Object> profile) {
-        nameInput.setText((String)profile.get("name"));
-        emailInput.setText((String)profile.get("email"));
-        addressInput.setText((String)profile.get("address"));
+        uniqueIdText.setText("ID: " + (String) profile.get("uniqueId"));
+        nameInput.setText((String) profile.get("name"));
+        ageInput.setText(String.valueOf((Integer) profile.get("age")));
+        genderInput.setText((String) profile.get("gender"));
+        emailInput.setText((String) profile.get("email"));
 
-        Blob imageBlob = (Blob)profile.get("imageData");
+        String preferences = "Class 1: " + profile.get("class1") + "\nClass 2: " + profile.get("class2");
+        preferencesText.setText(preferences);
 
+        List<String> likedItems = (List<String>) profile.get("likedItems");
+        likedItemsAdapter.setLikedItems(likedItems);
+
+        Blob imageBlob = (Blob) profile.get("imageData");
         if (imageBlob != null) {
             Drawable d = Drawable.createFromStream(imageBlob.getContentStream(), "res");
             imageView.setImageDrawable(d);

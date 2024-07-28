@@ -5,17 +5,15 @@ import com.group7.recommenderapp.dao.UserDao;
 import com.group7.recommenderapp.dao.UserProfileDao;
 import com.group7.recommenderapp.entities.User;
 import com.group7.recommenderapp.entities.UserProfile;
+import com.group7.recommenderapp.entities.UserPreference;
 import com.group7.recommenderapp.util.DatabaseManager;
 import com.group7.recommenderapp.util.UserUtils;
-
 import java.util.Map;
 
 public class UserService {
 
     private UserDao userDao;
-
     private UserProfileDao userProfileDao;
-
     private static UserService userServiceInstance = null;
 
     protected UserService(Context context) {
@@ -26,7 +24,7 @@ public class UserService {
     public static UserService getUserServiceInstance(Context context) {
         if (userServiceInstance == null) {
             synchronized (UserService.class) {
-                if(userServiceInstance == null) {
+                if (userServiceInstance == null) {
                     userServiceInstance = new UserService(context);
                 }
             }
@@ -36,11 +34,12 @@ public class UserService {
 
     public int createNewUser(String username, String password) {
         User user = new User();
-        if(UserUtils.isValidEmail(username)) {
+        if (UserUtils.isValidEmail(username)) {
             user.setUserName(username);
             user.setPassword(password);
             user.setDocumentId(UserUtils.generateUserDocId(username));
             userDao.createOrUpdateUser(user);
+            return 200;
         }
         return 400;
     }
@@ -48,22 +47,30 @@ public class UserService {
     public int authenUser(String username, String password) {
         String userId = UserUtils.generateUserDocId(username);
         User user = userDao.getUser(userId);
-        if(user !=null && user.getPassword().equals(password)) {
+        if (user != null && user.getPassword().equals(password)) {
             return 200;
         }
         return 400;
     }
 
     public void createUserProfile(Map<String, Object> userInfo) {
-
+        UserProfile userProfile = new UserProfile((String) userInfo.get("userDocumentId"));
+        userProfile.setGender((String) userInfo.get("gender"));
+        userProfile.setAge((Integer) userInfo.get("age"));
+        UserPreference preferences = new UserPreference((String) userInfo.get("class1"));
+        preferences.setClass2((String) userInfo.get("class2"));
+        preferences.setPreferredLanguage((String) userInfo.get("preferredLanguage"));
+        preferences.setPreferenceDict((Map<String, Object>) userInfo.get("preferences"));
+        userProfile.setPreferences(preferences);
+        userProfileDao.createOrUpdateProfile(userProfile);
     }
 
     public void updateUserProfile(Map<String, Object> userInfo) {
-
+        createUserProfile(userInfo);
     }
 
     public User selectUser(String username) {
-        if(UserUtils.isValidEmail(username)) {
+        if (UserUtils.isValidEmail(username)) {
             String docId = UserUtils.generateUserDocId(username);
             return userDao.getUser(docId);
         }
@@ -71,7 +78,7 @@ public class UserService {
     }
 
     public UserProfile selectUserProfile(String username) {
-        if(UserUtils.isValidEmail(username)) {
+        if (UserUtils.isValidEmail(username)) {
             String userDocId = UserUtils.generateUserDocId(username);
             String profileDocId = UserUtils.generateUserProfileDocId(username, userDocId);
             return userProfileDao.getUserProfile(profileDocId);

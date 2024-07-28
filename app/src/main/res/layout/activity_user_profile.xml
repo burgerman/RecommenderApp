@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".profile.UserProfileActivity">
+
     <androidx.core.widget.NestedScrollView
         android:id="@+id/nestedScrollView"
         android:layout_width="0dp"
@@ -14,84 +15,100 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
+
         <LinearLayout
             android:id="@+id/linearLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="25dp"
             android:orientation="vertical"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:padding="16dp">
+
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/imageView"
                 android:layout_width="200dp"
                 android:layout_height="200dp"
                 android:layout_gravity="center"
                 android:src="@mipmap/profile_placeholder" />
+
             <Button
                 android:layout_width="150dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:onClick="onUploadPhotoTapped"
                 android:text="Upload Photo" />
-            <TableLayout
+
+            <TextView
+                android:id="@+id/uniqueIdText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="30dp">
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="5dp"
-                        android:text="Name:"
-                        android:textColor="@color/black" />
-                    <EditText
-                        android:id="@+id/nameInput"
-                        android:layout_width="200dp"
-                        android:layout_height="wrap_content"
-                        android:padding="5dp" />
-                </TableRow>
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="5dp"
-                        android:text="Email:"
-                        android:textColor="@color/black" />
-                    <EditText
-                        android:id="@+id/emailInput"
-                        android:enabled="false"
-                        android:layout_width="200dp"
-                        android:layout_height="wrap_content"
-                        android:padding="5dp" />
-                </TableRow>
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="5dp"
-                        android:text="Address:"
-                        android:textColor="@color/black" />
-                    <EditText
-                        android:id="@+id/addressInput"
-                        android:layout_width="200dp"
-                        android:layout_height="wrap_content"
-                        android:padding="5dp" />
-                </TableRow>
-            </TableLayout>
+                android:layout_marginTop="16dp"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/nameInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Name"
+                android:layout_marginTop="8dp" />
+
+            <EditText
+                android:id="@+id/ageInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Age"
+                android:inputType="number"
+                android:layout_marginTop="8dp" />
+
+            <EditText
+                android:id="@+id/genderInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Gender"
+                android:layout_marginTop="8dp" />
+
+            <TextView
+                android:id="@+id/emailInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Preferences"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/preferencesText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Liked Items"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/likedItemsRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="16dp"
                 android:gravity="center">
+
                 <Button
                     android:layout_width="125dp"
                     android:layout_height="wrap_content"
@@ -101,6 +118,7 @@
                     android:onClick="onLogoutTapped"
                     android:id="@+id/logoutButton"
                     android:text="Log out" />
+
                 <Button
                     android:layout_width="125dp"
                     android:layout_height="wrap_content"
@@ -108,7 +126,11 @@
                     android:onClick="onSaveTapped"
                     android:id="@+id/saveButton"
                     android:text="Save" />
+
             </LinearLayout>
+
         </LinearLayout>
+
     </androidx.core.widget.NestedScrollView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

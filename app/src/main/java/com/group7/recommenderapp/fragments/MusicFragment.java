@@ -9,18 +9,22 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.group7.recommenderapp.R;
-import com.group7.recommenderapp.entities.ContentItem;
-import com.group7.recommenderapp.ui.home.HomeContract;
-import com.group7.recommenderapp.ui.home.HomePresenter;
+import com.group7.recommenderapp.entities.MusicItem;
+import com.group7.recommenderapp.ui.music.MusicAdapter;
+import com.group7.recommenderapp.ui.music.MusicContract;
+import com.group7.recommenderapp.ui.music.MusicPresenter;
+import java.util.ArrayList;
 import java.util.List;
 
-public class MusicFragment extends Fragment implements HomeContract.View {
+public class MusicFragment extends Fragment implements MusicContract.View {
 
     private RecyclerView recyclerView;
     private ProgressBar progressBar;
-    private HomeContract.Presenter presenter;
+    private MusicContract.Presenter presenter;
+    private MusicAdapter musicAdapter;
 
     @Nullable
     @Override
@@ -34,13 +38,20 @@ public class MusicFragment extends Fragment implements HomeContract.View {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        presenter = new HomePresenter(this, requireContext());
-        presenter.loadRecommendedContent();
+        presenter = new MusicPresenter(this, requireContext());
+        setupRecyclerView();
+        presenter.loadMusic();
+    }
+
+    private void setupRecyclerView() {
+        musicAdapter = new MusicAdapter(new ArrayList<>(), music -> presenter.onMusicItemClicked(music));
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setAdapter(musicAdapter);
     }
 
     @Override
-    public void showRecommendedContent(List<ContentItem> content) {
-        // TODO: Set up RecyclerView adapter and display content
+    public void showMusic(List<MusicItem> music) {
+        musicAdapter.setMusic(music);
     }
 
     @Override
