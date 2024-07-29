@@ -21,5 +21,7 @@
     <string name="music">Music</string>
     <string name="username_or_email">Username or Email</string>
     <string name="Details">Details</string>
+    <string name="home">home</string>
+    <string name="user_profile">UserProfile</string>
 
 </resources>

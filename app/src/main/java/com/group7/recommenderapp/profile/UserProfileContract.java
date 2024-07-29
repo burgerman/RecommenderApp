@@ -3,9 +3,10 @@ package com.group7.recommenderapp.profile;
 import java.util.Map;
 
 public interface UserProfileContract {
-
     interface View {
         void showProfile(Map<String, Object> profile);
+        void showSuccess(String message);
+        void showError(String message);
     }
 
     interface UserActionsListener {

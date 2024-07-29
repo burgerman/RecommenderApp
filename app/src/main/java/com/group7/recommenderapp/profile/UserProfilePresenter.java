@@ -1,56 +1,82 @@
 package com.group7.recommenderapp.profile;
 
 import android.content.Context;
-import com.couchbase.lite.CouchbaseLiteException;
-import com.couchbase.lite.Database;
-import com.couchbase.lite.Document;
-import com.couchbase.lite.MutableDocument;
+import android.util.Log;
+import com.couchbase.lite.Blob;
+import com.group7.recommenderapp.dao.UserProfileDao;
+import com.group7.recommenderapp.entities.UserProfile;
 import com.group7.recommenderapp.util.DatabaseManager;
 import java.util.HashMap;
 import java.util.Map;
 
 public class UserProfilePresenter implements UserProfileContract.UserActionsListener {
-    private UserProfileContract.View mUserProfileView;
-    private Context context;
 
-    public UserProfilePresenter(UserProfileContract.View mUserProfileView, Context context) {
-        this.mUserProfileView = mUserProfileView;
+    private static final String TAG = "UserProfilePresenter";
+    private final UserProfileContract.View mView;
+    private final Context context;
+    private final UserProfileDao userProfileDao;
+
+    public UserProfilePresenter(UserProfileContract.View view, Context context) {
+        this.mView = view;
         this.context = context;
+        this.userProfileDao = new UserProfileDao(DatabaseManager.getSharedInstance(context).getProfileCollection());
     }
 
+    @Override
     public void fetchProfile() {
-        Database database = DatabaseManager.getDatabase();
-        String docId = DatabaseManager.getSharedInstance(context).getCurrentUserDocId();
+        String currentUserDocId = DatabaseManager.getSharedInstance(context).getCurrentUserDocId();
+        UserProfile userProfile = userProfileDao.getUserProfile(currentUserDocId);
 
-        if (database != null) {
-            Map<String, Object> profile = new HashMap<>();
-            profile.put("email", DatabaseManager.getSharedInstance(context).currentUser);
+        if (userProfile != null) {
+            Map<String, Object> profileMap = new HashMap<>();
+            profileMap.put("uniqueId", userProfile.getUniqueId());
+            profileMap.put("name", userProfile.getName());
+            profileMap.put("age", userProfile.getAge());
+            profileMap.put("gender", userProfile.getGender());
+            profileMap.put("email", userProfile.getEmail());
 
-            Document document = database.getDocument(docId);
-            if (document != null) {
-                profile.put("uniqueId", document.getString("uniqueId"));
-                profile.put("name", document.getString("name"));
-                profile.put("age", document.getNumber("age").intValue());
-                profile.put("gender", document.getString("gender"));
-                profile.put("class1", document.getString("class1"));
-                profile.put("class2", document.getString("class2"));
-                profile.put("likedItems", document.getArray("likedItems").toList());
-                profile.put("imageData", document.getBlob("imageData"));
+            if (userProfile.getPreferences() != null) {
+                profileMap.put("class1", userProfile.getPreferences().getClass1());
+                profileMap.put("class2", userProfile.getPreferences().getClass2());
             }
 
-            mUserProfileView.showProfile(profile);
+            profileMap.put("likedItems", userProfile.getLikedItems());
+            profileMap.put("imageData", userProfile.getImageData());
+
+            mView.showProfile(profileMap);
+        } else {
+            Log.e(TAG, "User profile not found for current user");
+            mView.showError("Failed to load user profile. Please try again.");
         }
     }
 
+    @Override
     public void saveProfile(Map<String, Object> profile) {
-        Database database = DatabaseManager.getDatabase();
-        String docId = DatabaseManager.getSharedInstance(context).getCurrentUserDocId();
-        MutableDocument mutableDocument = new MutableDocument(docId, profile);
+        String currentUserDocId = DatabaseManager.getSharedInstance(context).getCurrentUserDocId();
+        UserProfile userProfile = userProfileDao.getUserProfile(currentUserDocId);
 
-        try {
-            database.save(mutableDocument);
-        } catch (CouchbaseLiteException e) {
-            e.printStackTrace();
+        if (userProfile == null) {
+            userProfile = new UserProfile(currentUserDocId);
+        }
+
+        userProfile.setName((String) profile.get("name"));
+        userProfile.setAge((Integer) profile.get("age"));
+        userProfile.setGender((String) profile.get("gender"));
+        userProfile.setEmail((String) profile.get("email"));
+
+        Blob imageData = (Blob) profile.get("imageData");
+        if (imageData != null) {
+            userProfile.setImageData(imageData);
+        }
+
+        boolean success = userProfileDao.createOrUpdateProfile(userProfile);
+
+        if (success) {
+            Log.d(TAG, "Profile updated successfully");
+            mView.showSuccess("Profile updated successfully!");
+        } else {
+            Log.e(TAG, "Failed to update profile");
+            mView.showError("Failed to update profile. Please try again.");
         }
     }
 }

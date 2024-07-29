@@ -2,21 +2,23 @@ package com.group7.recommenderapp.ui.login;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatImageView;
+import com.couchbase.lite.Collection;
 import com.group7.recommenderapp.R;
-import com.group7.recommenderapp.profile.UserProfileActivity;
+import com.group7.recommenderapp.entities.User;
+import com.group7.recommenderapp.ui.signup.SignUpActivity;
+import com.group7.recommenderapp.util.DatabaseManager;
 import com.group7.recommenderapp.ui.preference.PreferenceSelectionActivity;
 
-public class LoginActivity extends AppCompatActivity implements LoginContract.View {
-
+public class LoginActivity extends AppCompatActivity {
+    private static final String TAG = "LoginActivity";
+    private LoginPresenter loginPresenter;
     private EditText usernameInput;
     private EditText passwordInput;
-    private AppCompatImageView imageView;
-    private LoginContract.Presenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,45 +27,38 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
 
         usernameInput = findViewById(R.id.usernameInput);
         passwordInput = findViewById(R.id.passwordInput);
-        imageView = findViewById(R.id.imageViewLogo);
 
-        presenter = new LoginPresenter(this, this);
-
-        // Makes logging in easier for testing
-        imageView.setOnClickListener(v -> {
-            usernameInput.setText("demo@example.com");
-            passwordInput.setText("password");
-        });
+        Collection userCollection = DatabaseManager.getSharedInstance(this).getUserCollection();
+        if (userCollection == null) {
+            Log.e(TAG, "User collection is null. Check database initialization.");
+            Toast.makeText(this, "Error initializing database. Please try again later.", Toast.LENGTH_LONG).show();
+            finish();
+            return;
+        }
+        loginPresenter = new LoginPresenter(this, userCollection);
     }
 
     public void onLoginTapped(View view) {
         String username = usernameInput.getText().toString();
         String password = passwordInput.getText().toString();
-        presenter.handleLogin(username, password);
+        loginPresenter.handleLogin(username, password);
+    }
+
+    public void onLoginSuccess(User user) {
+        Toast.makeText(this, "Login successful", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(this, PreferenceSelectionActivity.class);
+        intent.putExtra("USER_ID", user.getDocumentId());
+        startActivity(intent);
+        finish();
+    }
+
+
+    public void onLoginFailure() {
+        Toast.makeText(this, "Login failed", Toast.LENGTH_SHORT).show();
     }
 
     public void onSignUpTapped(View view) {
-        String username = usernameInput.getText().toString();
-        String password = passwordInput.getText().toString();
-        presenter.handleSignUp(username, password);
-    }
-
-    @Override
-    public void showError(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void navigateToUserProfile() {
-        Intent intent = new Intent(getApplicationContext(), UserProfileActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
-    }
-
-    @Override
-    public void navigateToPreferenceSelection() {
-        Intent intent = new Intent(getApplicationContext(), PreferenceSelectionActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        Intent intent = new Intent(this, SignUpActivity.class);
         startActivity(intent);
     }
 }

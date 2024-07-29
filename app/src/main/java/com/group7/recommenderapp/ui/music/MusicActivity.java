@@ -4,13 +4,13 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.group7.recommenderapp.R;
 import com.group7.recommenderapp.fragments.MusicFragment;
+import com.group7.recommenderapp.ui.base.BaseActivity;
 
-public class MusicActivity extends AppCompatActivity {
+public class MusicActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,5 +69,4 @@ public class MusicActivity extends AppCompatActivity {
             return super.onOptionsItemSelected(item);
         }
     }
-
 }

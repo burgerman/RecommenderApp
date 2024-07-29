@@ -28,6 +28,12 @@ public class MusicPreferenceAdapter extends RecyclerView.Adapter<MusicPreference
         return new ViewHolder(view);
     }
 
+    public void setSelectedPreferences(List<String> selectedPreferences) {
+        this.selectedPreferences.clear();
+        this.selectedPreferences.addAll(selectedPreferences);
+        notifyDataSetChanged();
+    }
+
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         String preference = musicPreferences.get(position);

@@ -9,10 +9,12 @@ public interface PreferenceSelectionContract {
         void navigateToHome();
         void showLoading();
         void hideLoading();
+        void displayExistingPreferences(List<String> moviePreferences, List<String> musicPreferences, String additionalPreference);
     }
 
     interface Presenter {
-        void savePreferences(List<String> moviePreferences, List<String> musicPreferences);
+        void savePreferences(String userId, List<String> moviePreferences, List<String> musicPreferences, String additionalPreference);
+        void loadExistingPreferences(String userId);
         List<String> getMovieGenres();
         List<String> getMusicGenres();
     }

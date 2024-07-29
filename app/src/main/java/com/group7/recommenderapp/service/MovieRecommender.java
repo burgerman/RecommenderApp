@@ -32,7 +32,7 @@ public class MovieRecommender implements RecommenderService<MovieItem> {
     }
 
     public static RecommenderService getInstance(Context ctx, MovieConfig config) {
-        synchronized (MusicRecommender.class) {
+        synchronized (MovieRecommender.class) {
             if(movieRecommenderInstance == null) {
                 movieRecommenderInstance = new MovieRecommender(ctx, config);
             }
@@ -67,7 +67,7 @@ public class MovieRecommender implements RecommenderService<MovieItem> {
             candidates.clear();
             for (MovieItem item : collection) {
                 Log.d(TAG, String.format("Load candidate: %s", item));
-                candidates.put(item.id, item);
+                candidates.put(item.getId(), item);
             }
             Log.v(TAG, "Candidate list loaded.");
         } catch (IOException ex) {
@@ -103,7 +103,7 @@ public class MovieRecommender implements RecommenderService<MovieItem> {
             if (i >= inputIds.length) {
                 break;
             }
-            inputIds[i] = item.id;
+            inputIds[i] = item.getId();
             ++i;
         }
         return inputIds;
@@ -117,7 +117,7 @@ public class MovieRecommender implements RecommenderService<MovieItem> {
             if (i >= inputRatings.length) {
                 break;
             }
-            // all selected movies wil be assigned rating to 1.0, it can be extended with more specific rating on UI if needed.
+            // all selected movies will be assigned rating to 1.0, it can be extended with more specific rating on UI if needed.
             inputRatings[i] = 1.0f;
             ++i;
         }
@@ -132,12 +132,15 @@ public class MovieRecommender implements RecommenderService<MovieItem> {
             if (i >= inputGenres.length) {
                 break;
             }
-            for (String genre : item.getGenres()) {
-                if (i >= inputGenres.length) {
-                    break;
+            List<String> itemGenres = item.getGenres();
+            if (itemGenres != null) {
+                for (String genre : itemGenres) {
+                    if (i >= inputGenres.length) {
+                        break;
+                    }
+                    inputGenres[i] = genres.containsKey(genre) ? genres.get(genre) : config.unknownGenre;
+                    ++i;
                 }
-                inputGenres[i] = genres.containsKey(genre) ? genres.get(genre) : config.unknownGenre;
-                ++i;
             }
         }
         return inputGenres;
@@ -195,13 +198,13 @@ public class MovieRecommender implements RecommenderService<MovieItem> {
 
     @Override
     public List<MovieItem> recommendByGenre(List<String> genres) {
-        Collection<MovieItem> items = candidates.values();
-
-        List<MovieItem> result = items.stream()
-                .filter(p->p.getGenres().stream().anyMatch(genres::contains))
-                .sorted(Comparator.comparing(MovieItem::getScore).reversed())
-                .collect(Collectors.toList());
-        return result.subList(0, Math.min(result.size(), config.topK));
+        // Fake implementation: return a random subset of movies
+        if (genres == null) {
+            genres = new ArrayList<>();
+        }
+        List<MovieItem> allMovies = new ArrayList<>(candidates.values());
+        Collections.shuffle(allMovies);
+        return allMovies.subList(0, Math.min(allMovies.size(), config.topK));
     }
 
     @Override

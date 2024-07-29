@@ -9,6 +9,7 @@ import com.group7.recommenderapp.entities.UserPreference;
 import com.group7.recommenderapp.util.DatabaseManager;
 import com.group7.recommenderapp.util.UserUtils;
 import java.util.Map;
+import java.util.List;
 
 public class UserService {
 
@@ -32,16 +33,15 @@ public class UserService {
         return userServiceInstance;
     }
 
-    public int createNewUser(String username, String password) {
-        User user = new User();
-        if (UserUtils.isValidEmail(username)) {
-            user.setUserName(username);
-            user.setPassword(password);
-            user.setDocumentId(UserUtils.generateUserDocId(username));
-            userDao.createOrUpdateUser(user);
-            return 200;
+    public User createNewUser(String username, String email, String password) {
+        if (UserUtils.isValidEmail(email)) {
+            User user = new User(username, email, password);
+            user.setDocumentId(UserUtils.generateUserDocId(email));
+            if (userDao.createOrUpdateUser(user)) {
+                return user;
+            }
         }
-        return 400;
+        return null;
     }
 
     public int authenUser(String username, String password) {
@@ -60,9 +60,18 @@ public class UserService {
         UserPreference preferences = new UserPreference((String) userInfo.get("class1"));
         preferences.setClass2((String) userInfo.get("class2"));
         preferences.setPreferredLanguage((String) userInfo.get("preferredLanguage"));
-        preferences.setPreferenceDict((Map<String, Object>) userInfo.get("preferences"));
+        updatePreferences(preferences, (Map<String, Object>) userInfo.get("preferences"));
         userProfile.setPreferences(preferences);
         userProfileDao.createOrUpdateProfile(userProfile);
+    }
+
+    private void updatePreferences(UserPreference preferences, Map<String, Object> preferencesMap) {
+        if (preferencesMap != null) {
+            preferences.setCategoriesClass1((List<String>) preferencesMap.get("categoriesClass1"));
+            preferences.setCategoriesClass2((List<String>) preferencesMap.get("categoriesClass2"));
+            preferences.setLikedMovieList((List<String>) preferencesMap.get("LikedMovieList"));
+            preferences.setLikedMusicList((List<String>) preferencesMap.get("LikedMusicList"));
+        }
     }
 
     public void updateUserProfile(Map<String, Object> userInfo) {

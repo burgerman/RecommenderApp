@@ -5,6 +5,7 @@ import com.group7.recommenderapp.entities.MovieItem;
 import com.group7.recommenderapp.service.MovieConfig;
 import com.group7.recommenderapp.service.MovieRecommender;
 import com.group7.recommenderapp.service.RecommenderService;
+import java.util.ArrayList;
 import java.util.List;
 
 public class MoviePresenter implements MovieContract.Presenter {
@@ -22,7 +23,7 @@ public class MoviePresenter implements MovieContract.Presenter {
     public void loadMovies() {
         view.showLoading();
         movieRecommender.load();
-        List<MovieItem> movies = movieRecommender.recommendByGenre(null); // Replace null with actual genres
+        List<MovieItem> movies = movieRecommender.recommendByGenre(new ArrayList<>()); // Ensure genres is not null
         view.hideLoading();
         view.showMovies(movies);
     }

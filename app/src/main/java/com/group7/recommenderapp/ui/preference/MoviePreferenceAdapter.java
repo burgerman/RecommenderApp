@@ -42,6 +42,12 @@ public class MoviePreferenceAdapter extends RecyclerView.Adapter<MoviePreference
         });
     }
 
+    public void setSelectedPreferences(List<String> selectedPreferences) {
+        this.selectedPreferences.clear();
+        this.selectedPreferences.addAll(selectedPreferences);
+        notifyDataSetChanged();
+    }
+
     @Override
     public int getItemCount() {
         return moviePreferences.size();

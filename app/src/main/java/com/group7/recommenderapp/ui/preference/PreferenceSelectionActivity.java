@@ -2,8 +2,10 @@ package com.group7.recommenderapp.ui.preference;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.group7.recommenderapp.R;
 import com.group7.recommenderapp.ui.home.HomeActivity;
+import com.group7.recommenderapp.util.UserUtils;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,20 +21,30 @@ public class PreferenceSelectionActivity extends AppCompatActivity implements Pr
 
     private RecyclerView movieRecyclerView;
     private RecyclerView musicRecyclerView;
+    private EditText additionalPreferenceInput;
     private Button savePreferencesButton;
     private ProgressBar progressBar;
     private PreferenceSelectionContract.Presenter presenter;
 
     private MoviePreferenceAdapter movieAdapter;
     private MusicPreferenceAdapter musicAdapter;
+    private String userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_preference_selection);
 
+        userId = getIntent().getStringExtra("USER_ID");
+        if (userId == null) {
+            Toast.makeText(this, "Error: User ID not found", Toast.LENGTH_LONG).show();
+            finish();
+            return;
+        }
+
         movieRecyclerView = findViewById(R.id.movieRecyclerView);
         musicRecyclerView = findViewById(R.id.musicRecyclerView);
+        additionalPreferenceInput = findViewById(R.id.additionalPreferenceInput);
         savePreferencesButton = findViewById(R.id.savePreferencesButton);
         progressBar = findViewById(R.id.progressBar);
 
@@ -44,9 +57,12 @@ public class PreferenceSelectionActivity extends AppCompatActivity implements Pr
             public void onClick(View v) {
                 List<String> selectedMoviePreferences = movieAdapter.getSelectedPreferences();
                 List<String> selectedMusicPreferences = musicAdapter.getSelectedPreferences();
-                presenter.savePreferences(selectedMoviePreferences, selectedMusicPreferences);
+                String additionalPreference = additionalPreferenceInput.getText().toString();
+                presenter.savePreferences(userId, selectedMoviePreferences, selectedMusicPreferences, additionalPreference);
             }
         });
+
+        presenter.loadExistingPreferences(userId);
     }
 
     private void setupRecyclerViews() {
@@ -65,7 +81,14 @@ public class PreferenceSelectionActivity extends AppCompatActivity implements Pr
 
     @Override
     public void showPreferencesSaved() {
-        Toast.makeText(this, "Preferences saved successfully", Toast.LENGTH_SHORT).show();
+        try {
+            Toast.makeText(this, "Preferences saved successfully", Toast.LENGTH_SHORT).show();
+            UserUtils.saveUserMoviePreferences(this, movieAdapter.getSelectedPreferences());
+            navigateToHome();
+        } catch (Exception e) {
+            Log.e("PreferenceSelection", "Error saving preferences", e);
+            showError("An error occurred while saving preferences. Please try again.");
+        }
     }
 
     @Override
@@ -76,6 +99,7 @@ public class PreferenceSelectionActivity extends AppCompatActivity implements Pr
     @Override
     public void navigateToHome() {
         Intent intent = new Intent(this, HomeActivity.class);
+        intent.putExtra("USER_ID", userId);
         startActivity(intent);
         finish();
     }
@@ -88,5 +112,18 @@ public class PreferenceSelectionActivity extends AppCompatActivity implements Pr
     @Override
     public void hideLoading() {
         progressBar.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void displayExistingPreferences(List<String> moviePreferences, List<String> musicPreferences, String additionalPreference) {
+        if (moviePreferences != null) {
+            movieAdapter.setSelectedPreferences(moviePreferences);
+        }
+        if (musicPreferences != null) {
+            musicAdapter.setSelectedPreferences(musicPreferences);
+        }
+        if (additionalPreference != null) {
+            additionalPreferenceInput.setText(additionalPreference);
+        }
     }
 }

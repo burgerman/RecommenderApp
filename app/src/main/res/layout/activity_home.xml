@@ -20,7 +20,8 @@
             android:background="?attr/colorPrimary"
             app:layout_scrollFlags="scroll|enterAlways"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-            app:title="@string/app_name">
+            app:title="@string/app_name"
+            app:menu="@menu/menu_main">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -79,75 +80,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="16dp">
-
-            <HorizontalScrollView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <LinearLayout
-                    android:id="@+id/advertisementLayout"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <!-- Add 7 TextView items for advertisements -->
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Adv 1"
-                        android:padding="8dp"
-                        android:layout_marginEnd="8dp"
-                        style="@style/AdvertisementText" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Adv 2"
-                        android:padding="8dp"
-                        android:layout_marginEnd="8dp"
-                        style="@style/AdvertisementText" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Adv 3"
-                        android:padding="8dp"
-                        android:layout_marginEnd="8dp"
-                        style="@style/AdvertisementText" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Adv 4"
-                        android:padding="8dp"
-                        android:layout_marginEnd="8dp"
-                        style="@style/AdvertisementText" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Adv 5"
-                        android:padding="8dp"
-                        android:layout_marginEnd="8dp"
-                        style="@style/AdvertisementText" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Adv 6"
-                        android:padding="8dp"
-                        android:layout_marginEnd="8dp"
-                        style="@style/AdvertisementText" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Adv 7"
-                        android:padding="8dp"
-                        style="@style/AdvertisementText" />
-
-                </LinearLayout>
-            </HorizontalScrollView>
 
             <LinearLayout
                 android:layout_width="match_parent"

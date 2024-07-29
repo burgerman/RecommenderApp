@@ -82,7 +82,7 @@ public class UserProfileActivity extends AppCompatActivity implements UserProfil
 
         setupLikedItemsRecyclerView();
 
-        mActionListener = new UserProfilePresenter(this);
+        mActionListener = new UserProfilePresenter(this, this);
 
         runOnUiThread(() -> mActionListener.fetchProfile());
     }
@@ -119,7 +119,6 @@ public class UserProfileActivity extends AppCompatActivity implements UserProfil
         }
 
         mActionListener.saveProfile(profile);
-        Toast.makeText(this, "Successfully updated profile!", Toast.LENGTH_SHORT).show();
     }
 
     private byte[] getImageViewBytes() {
@@ -144,7 +143,8 @@ public class UserProfileActivity extends AppCompatActivity implements UserProfil
         genderInput.setText((String) profile.get("gender"));
         emailInput.setText((String) profile.get("email"));
 
-        String preferences = "Class 1: " + profile.get("class1") + "\nClass 2: " + profile.get("class2");
+        String preferences = "Movie Preferences: " + profile.get("moviePreferences") +
+                "\nMusic Preferences: " + profile.get("musicPreferences");
         preferencesText.setText(preferences);
 
         List<String> likedItems = (List<String>) profile.get("likedItems");
@@ -155,5 +155,15 @@ public class UserProfileActivity extends AppCompatActivity implements UserProfil
             Drawable d = Drawable.createFromStream(imageBlob.getContentStream(), "res");
             imageView.setImageDrawable(d);
         }
+    }
+
+    @Override
+    public void showSuccess(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showError(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
 }

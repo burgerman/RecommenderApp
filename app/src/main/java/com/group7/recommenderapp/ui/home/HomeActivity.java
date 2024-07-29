@@ -1,12 +1,12 @@
 package com.group7.recommenderapp.ui.home;
 
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
 import com.group7.recommenderapp.R;
 import com.group7.recommenderapp.fragments.MovieFragment;
 import com.group7.recommenderapp.fragments.MusicFragment;
+import com.group7.recommenderapp.ui.base.BaseActivity;
 
-public class HomeActivity extends AppCompatActivity {
+public class HomeActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

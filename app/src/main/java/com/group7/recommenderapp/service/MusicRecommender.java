@@ -2,32 +2,21 @@ package com.group7.recommenderapp.service;
 
 import android.content.Context;
 import android.util.Log;
-
 import androidx.annotation.WorkerThread;
-
 import com.group7.recommenderapp.util.FileUtilMusic;
 import com.group7.recommenderapp.entities.MusicItem;
-
 import org.tensorflow.lite.Interpreter;
-
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class MusicRecommender implements RecommenderService<MusicItem> {
     private static final String TAG = "MusicBasedRecommender";
 
     private Interpreter modelInterpreter;
-    final Map<Integer, MusicItem> candidates = new HashMap<>();
-    final Map<String, Integer> genres = new HashMap<>();
+    private final Map<Integer, MusicItem> candidates = new HashMap<>();
+    private final Map<String, Integer> genres = new HashMap<>();
 
     private final Context context;
     private final MusicConfig config;
@@ -42,11 +31,9 @@ public class MusicRecommender implements RecommenderService<MusicItem> {
         }
     }
 
-    public static RecommenderService getInstance(Context ctx, MusicConfig config) {
-        synchronized (MusicRecommender.class) {
-            if(musicRecommenderInstance == null) {
-                musicRecommenderInstance = new MusicRecommender(ctx, config);
-            }
+    public static synchronized RecommenderService getInstance(Context ctx, MusicConfig config) {
+        if (musicRecommenderInstance == null) {
+            musicRecommenderInstance = new MusicRecommender(ctx, config);
         }
         return musicRecommenderInstance;
     }
@@ -61,28 +48,27 @@ public class MusicRecommender implements RecommenderService<MusicItem> {
     }
 
     private void loadModel() {
-        try{
+        try {
             ByteBuffer buffer = FileUtilMusic.loadModelFile(context.getAssets(), config.model);
             modelInterpreter = new Interpreter(buffer);
-            Log.i(TAG,"Music Model loaded");
+            Log.i(TAG, "Music Model loaded");
         } catch (IOException e) {
-            Log.e(TAG, e.getMessage());
+            Log.e(TAG, "Error loading music model: " + e.getMessage());
         }
     }
 
     @WorkerThread
     private synchronized void loadCandidateList() {
         try {
-            Collection<MusicItem> collection =
-                    FileUtilMusic.loadMusicList(this.context.getAssets(), config.musicList);
+            Collection<MusicItem> collection = FileUtilMusic.loadMusicList(this.context.getAssets(), config.musicList);
             candidates.clear();
             for (MusicItem item : collection) {
                 Log.d(TAG, String.format("Load candidate: %s", item));
-                candidates.put(item.id, item);
+                candidates.put(item.getId(), item);
             }
             Log.v(TAG, "Candidate list loaded.");
         } catch (IOException ex) {
-            Log.e(TAG, ex.getMessage());
+            Log.e(TAG, "Error loading candidate list: " + ex.getMessage());
         }
     }
 
@@ -97,96 +83,86 @@ public class MusicRecommender implements RecommenderService<MusicItem> {
             }
             Log.v(TAG, "Genre list loaded.");
         } catch (IOException ex) {
-            Log.e(TAG, ex.getMessage());
+            Log.e(TAG, "Error loading genre list: " + ex.getMessage());
         }
     }
 
     @Override
     public void unload() {
-        if(modelInterpreter!=null) modelInterpreter.close();
+        if (modelInterpreter != null) {
+            modelInterpreter.close();
+            modelInterpreter = null;
+        }
     }
 
-    int[] preprocessIds(List<MusicItem> selectedMovies, int length) {
+    private int[] preprocessIds(List<MusicItem> selectedMusic, int length) {
         int[] inputIds = new int[length];
-        Arrays.fill(inputIds, config.pad); // Fill inputIds with the default.
+        Arrays.fill(inputIds, config.pad);
         int i = 0;
-        for (MusicItem item : selectedMovies) {
-            if (i >= inputIds.length) {
-                break;
-            }
-            inputIds[i] = item.id;
-            ++i;
+        for (MusicItem item : selectedMusic) {
+            if (i >= inputIds.length) break;
+            inputIds[i++] = item.getId();
         }
         return inputIds;
     }
 
-    float[] preprocessRatings(List<MusicItem> selectedMovies, int length) {
+    private float[] preprocessRatings(List<MusicItem> selectedMusic, int length) {
         float[] inputRatings = new float[length];
-        Arrays.fill(inputRatings, config.pad); // Fill inputIds with the default.
+        Arrays.fill(inputRatings, config.pad);
         int i = 0;
-        for (MusicItem item : selectedMovies) {
-            if (i >= inputRatings.length) {
-                break;
-            }
-            // all selected music will be assigned rating to 1.0, it can be extended with more specific rating on UI if needed.
-            inputRatings[i] = 1.0f;
-            ++i;
+        for (MusicItem item : selectedMusic) {
+            if (i >= inputRatings.length) break;
+            inputRatings[i++] = 1.0f;
         }
         return inputRatings;
     }
 
-    int[] preprocessGenres(List<MusicItem> selectedMovies, int length) {
-        // Fill inputGenres.
+    private int[] preprocessGenres(List<MusicItem> selectedMusic, int length) {
         int[] inputGenres = new int[length];
-        Arrays.fill(inputGenres, config.unknownGenre); // Fill inputGenres with the default.
+        Arrays.fill(inputGenres, config.unknownGenre);
         int i = 0;
-        for (MusicItem item : selectedMovies) {
-            if (i >= inputGenres.length) {
-                break;
-            }
-            for (String genre : item.getGenres()) {
-                if (i >= inputGenres.length) {
-                    break;
+        for (MusicItem item : selectedMusic) {
+            if (i >= inputGenres.length) break;
+            List<String> itemGenres = item.getGenres();
+            if (itemGenres != null) {
+                for (String genre : itemGenres) {
+                    if (i >= inputGenres.length) break;
+                    inputGenres[i++] = genres.getOrDefault(genre, config.unknownGenre);
                 }
-                inputGenres[i] = genres.containsKey(genre) ? genres.get(genre) : config.unknownGenre;
-                ++i;
             }
         }
         return inputGenres;
     }
 
     @WorkerThread
-    synchronized Object[] preprocess(List<MusicItem> selectedMusic) {
+    private synchronized Object[] preprocess(List<MusicItem> selectedMusic) {
         List<Object> inputs = new ArrayList<>();
-
         List<MusicConfig.Feature> sortedFeatures = new ArrayList<>(config.inputs);
-        Collections.sort(sortedFeatures, (MusicConfig.Feature a, MusicConfig.Feature b) -> Integer.compare(a.index, b.index));
+        sortedFeatures.sort(Comparator.comparingInt(feature -> feature.index));
 
         for (MusicConfig.Feature feature : sortedFeatures) {
-            if (MusicConfig.FEATURE_MUSIC.equals(feature.name)) {
-                inputs.add(preprocessIds(selectedMusic, feature.inputLength));
-            } else if (MusicConfig.FEATURE_GENRE.equals(feature.name)) {
-                inputs.add(preprocessGenres(selectedMusic, feature.inputLength));
-            } else if(MusicConfig.FEATURE_RATING.equals(feature.name)) {
-                inputs.add(preprocessRatings(selectedMusic, feature.inputLength));
-            } else {
-                Log.e(TAG, String.format("Invalid feature: %s", feature.name));
+            switch (feature.name) {
+                case MusicConfig.FEATURE_MUSIC:
+                    inputs.add(preprocessIds(selectedMusic, feature.inputLength));
+                    break;
+                case MusicConfig.FEATURE_GENRE:
+                    inputs.add(preprocessGenres(selectedMusic, feature.inputLength));
+                    break;
+                case MusicConfig.FEATURE_RATING:
+                    inputs.add(preprocessRatings(selectedMusic, feature.inputLength));
+                    break;
+                default:
+                    Log.e(TAG, String.format("Invalid feature: %s", feature.name));
             }
         }
         return inputs.toArray();
     }
 
     @WorkerThread
-    synchronized List<MusicItem> postprocess(
-            int[] outputIds, float[] confidences, List<MusicItem> selectedMusic) {
-        final ArrayList<MusicItem> results = new ArrayList<>();
+    private synchronized List<MusicItem> postprocess(int[] outputIds, float[] confidences, List<MusicItem> selectedMusic) {
+        final List<MusicItem> results = new ArrayList<>();
 
-        for (int i = 0; i < outputIds.length; i++) {
-            if (results.size() >= config.topK) {
-                Log.v(TAG, String.format("Selected top K: %d. Ignore the rest.", config.topK));
-                break;
-            }
-
+        for (int i = 0; i < outputIds.length && results.size() < config.topK; i++) {
             int id = outputIds[i];
             MusicItem item = candidates.get(id);
             if (item == null) {
@@ -207,17 +183,25 @@ public class MusicRecommender implements RecommenderService<MusicItem> {
 
     @Override
     public List<MusicItem> recommendByGenre(List<String> genres) {
-        Collection<MusicItem> items = candidates.values();
+        if (genres == null || genres.isEmpty()) {
+            Log.w(TAG, "No genres provided for recommendation");
+            return new ArrayList<>();
+        }
 
-        List<MusicItem> result = items.stream()
-                .filter(p->p.getGenres().stream().anyMatch(genres::contains))
+        return candidates.values().stream()
+                .filter(p -> p.getGenres() != null && !Collections.disjoint(p.getGenres(), genres))
                 .sorted(Comparator.comparing(MusicItem::getScore).reversed())
+                .limit(config.topK)
                 .collect(Collectors.toList());
-        return result.subList(0, config.topK);
     }
 
     @Override
     public List<MusicItem> recommendByItem(List<MusicItem> selectedMusic) {
+        if (selectedMusic == null || selectedMusic.isEmpty()) {
+            Log.w(TAG, "No music items provided for recommendation");
+            return new ArrayList<>();
+        }
+
         Object[] inputs = preprocess(selectedMusic);
 
         int[] outputIds = new int[config.outputLength];
@@ -225,11 +209,9 @@ public class MusicRecommender implements RecommenderService<MusicItem> {
         Map<Integer, Object> outputs = new HashMap<>();
         outputs.put(config.outputIdsIndex, outputIds);
         outputs.put(config.outputScoresIndex, confidences);
+
         modelInterpreter.runForMultipleInputsOutputs(inputs, outputs);
 
         return postprocess(outputIds, confidences, selectedMusic);
     }
-
-    // Additional helper methods (preprocessIds, preprocessRatings, preprocessGenres) would be similar to MovieRecommender
-    // ...
 }
