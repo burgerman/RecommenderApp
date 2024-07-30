@@ -32,9 +32,10 @@ import com.group7.recommenderapp.entities.MovieItem;
 import com.group7.recommenderapp.service.MovieConfig;
 
 public class FileUtil {
-    public static final String DOWNLOAD_FILE_URL = "http://10.0.2.2:8000/test.txt";
-    public static final String LOCAL_FILE_NAME = "local_file.txt";
-
+    public static final String MOVIE_CONTENT_FILE_URL = "http://10.0.2.2:8000/sorted_movie_vocab.json";
+    public static final String MUSIC_CONTENT_FILE_URL = "http://10.0.2.2:8000/sorted_music_vocab.json";
+    public static final String LOCAL_MOVIE_CONTENT_FILE_NAME = "sorted_movie_vocab.json";
+    public static final String LOCAL_MUSIC_CONTENT_FILE_NAME = "sorted_music_vocab.json";
     /** Load TF Lite model from asset file. */
     public static MappedByteBuffer loadModelFile(AssetManager assetManager, String modelPath)
             throws IOException {
