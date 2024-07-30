@@ -19,7 +19,7 @@ public class UserUtils {
     }
 
     public static String generateUserProfileDocId(String username, String userDocId) {
-        return username+userDocId;
+        return username.toLowerCase().split("@")[0]+userDocId;
     }
 
     public static boolean isCorrectPassword(User user, String givenPassword) {

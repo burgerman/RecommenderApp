@@ -19,7 +19,7 @@ import java.util.concurrent.Executor;
 public class DatabaseManager {
 
     private static final String TAG = "DatabaseManager";
-    private static final String DB_USER = "";
+    private static final String DB_USER = "user_db";
     private static Database database;
     private static DatabaseManager instance = null;
     private ListenerToken listenerToken;
@@ -33,10 +33,17 @@ public class DatabaseManager {
     protected DatabaseManager(Context context) {
         CouchbaseLite.init(context);
         DatabaseConfiguration config = new DatabaseConfiguration();
+        config.setDirectory(String.format("%s/%s", context.getFilesDir(), DB_USER));
         try {
             database = new Database(DATABASE_NAME, config);
             userCollection = database.getDefaultScope().getCollection(USER_COLLECTION);
+            if(userCollection==null) {
+                userCollection = database.createCollection(USER_COLLECTION, database.getDefaultScope().getName());
+            }
             profileCollection = database.getDefaultScope().getCollection(PROFILE_COLLECTION);
+            if(profileCollection==null) {
+                profileCollection = database.createCollection(PROFILE_COLLECTION, database.getDefaultScope().getName());
+            }
         } catch (CouchbaseLiteException e) {
             Log.e(TAG, e.getMessage());
         }

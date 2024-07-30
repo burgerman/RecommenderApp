@@ -26,7 +26,6 @@ public class UserProfileDao {
     public void createOrUpdateProfile (UserProfile userProfile) {
         MutableDocument doc = new MutableDocument(userProfile.getUserDocumentId());
         doc.setString("type", docType);
-        doc.setString("userDocumentId", userProfile.getUserDocumentId());
         doc.setString("gender", userProfile.getGender());
         doc.setInt("age", userProfile.getAge());
         if (userProfile.getPreferences() != null) {
@@ -49,15 +48,15 @@ public class UserProfileDao {
     public UserProfile getUserProfile(String documentId) {
         LOGGER.info("Fetching user profile for document ID: " + documentId);
         try{
-        Document doc = collection.getDocument(documentId);
+            Document doc = collection.getDocument(documentId);
             if (doc != null) {
                 UserProfile userProfile = new UserProfile(documentId);
                 userProfile.setAge(doc.getInt("age"));
-                userProfile.setGender(doc.getString("gender"));
+                userProfile.setGender(doc.getString("gender")!=null?doc.getString("gender"):"");
                 UserPreference preferences = null;
-                preferences = new UserPreference(doc.getString("class1"));
-                preferences.setPreferredLanguage(doc.getString("preferredLanguage"));
-                preferences.setClass2(doc.getString("class2"));
+                preferences = new UserPreference(doc.getString("class1")!=null?doc.getString("class1"):"");
+                preferences.setPreferredLanguage(doc.getString("preferredLanguage")!=null?doc.getString("preferredLanguage"):"");
+                preferences.setClass2(doc.getString("class2")!=null?doc.getString("class2"):"");
 
                 MutableDictionary preferencesDict = doc.toMutable().getDictionary("preferences");
                 if (preferencesDict != null) {
