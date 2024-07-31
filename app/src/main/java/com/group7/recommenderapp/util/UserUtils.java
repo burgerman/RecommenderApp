@@ -22,6 +22,10 @@ public class UserUtils {
         return username.toLowerCase().split("@")[0]+userDocId;
     }
 
+    public static String getUserProfileIDByName(String username) {
+        return generateUserProfileDocId(username, generateUserDocId(username));
+    }
+
     public static boolean isCorrectPassword(User user, String givenPassword) {
         return user.getPassword().equals(givenPassword);
     }

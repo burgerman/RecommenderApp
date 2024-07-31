@@ -71,8 +71,8 @@ public class UserService {
     public void createOrUpdateUserProfile(Map<String, Object> userInfo) {
         if(userInfo.get("username")!=null) {
             String userName = (String) userInfo.get("username");
-            String userDocID = UserUtils.generateUserDocId(userName);
-            UserProfile userProfile = new UserProfile(UserUtils.generateUserProfileDocId(userName, userDocID));
+            String profileDocId = UserUtils.getUserProfileIDByName(userName);
+            UserProfile userProfile = new UserProfile(profileDocId);
             userProfile.setAge(userInfo.get("age")!= null? (Integer) userInfo.get("age"):0);
             userProfile.setGender(userInfo.get("gender")!=null? (String) userInfo.get("gender"):"");
             UserPreference userPreference = new UserPreference((String) userInfo.get("class1"));
@@ -95,12 +95,24 @@ public class UserService {
         return null;
     }
 
+    public void deleteUser(String username) {
+        if(userDao.deleteUserDoc(UserUtils.generateUserDocId(username))){
+            Log.i("UserService", "User: "+username + " has been deleted from the DB");
+        }
+    }
+
     public UserProfile selectUserProfile(String username) {
         if(UserUtils.isValidEmail(username)) {
-            String userDocId = UserUtils.generateUserDocId(username);
-            String profileDocId = UserUtils.generateUserProfileDocId(username, userDocId);
+            String profileDocId = UserUtils.getUserProfileIDByName(username);
             return userProfileDao.getUserProfile(profileDocId);
         }
         return null;
+    }
+
+    public void deleteUserProfile(String username) {
+        String profileDocId = UserUtils.getUserProfileIDByName(username);
+        if(userProfileDao.deleteProfileDocument(profileDocId)){
+            Log.i("UserService", "The profile of User: "+username + " has been deleted from the DB");
+        }
     }
 }

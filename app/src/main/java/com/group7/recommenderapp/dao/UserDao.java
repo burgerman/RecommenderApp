@@ -51,5 +51,18 @@ public class UserDao {
         return null;
     }
 
+    public boolean deleteUserDoc(String docId) {
+        try{
+            Document doc = collection.getDocument(docId);
+            if(doc!=null) {
+                collection.delete(doc);
+                return true;
+            }
+        } catch (CouchbaseLiteException e) {
+            LOGGER.log(Level.SEVERE, "failed to delete the user "+docId, e);
+        }
+        return false;
+    }
+
 
 }

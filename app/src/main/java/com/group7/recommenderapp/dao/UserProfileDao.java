@@ -73,4 +73,16 @@ public class UserProfileDao {
         return null;
     }
 
+    public boolean deleteProfileDocument(String documentId) {
+        try{
+            Document doc = collection.getDocument(documentId);
+            if(doc!=null) {
+                collection.delete(doc);
+                return true;
+            }
+        } catch (CouchbaseLiteException e) {
+            LOGGER.log(Level.SEVERE, "failed to delete user profile "+documentId, e);
+        }
+        return false;
+    }
 }
