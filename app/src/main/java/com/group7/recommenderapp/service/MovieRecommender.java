@@ -95,6 +95,11 @@ public class MovieRecommender implements RecommenderService<MovieItem> {
         if(modelInterpreter!=null) modelInterpreter.close();
     }
 
+    @Override
+    public List<String> getGenresForRecommend() throws IOException {
+        return FileUtil.loadGenreList(context.getAssets(), config.genreList);
+    }
+
     int[] preprocessIds(List<MovieItem> selectedMovies, int length) {
         int[] inputIds = new int[length];
         Arrays.fill(inputIds, config.pad);

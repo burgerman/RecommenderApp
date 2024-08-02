@@ -31,9 +31,9 @@ import java.util.Random;
  *
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
-public class RecommenderServiceTest {
+public class MovieRecommenderServiceTest {
     private static final String CONFIG_PATH = "movie_config.json";  // Default config path in assets.
-    private static final String TAG = "RecommenderServiceUnitTest";
+    private static final String TAG = "MovieRecommenderServiceTest";
     private static MovieConfig config;
     private static RecommenderService movieRecommender;
     private static final int RANDOM_BOUNDS = 10;
@@ -61,7 +61,8 @@ public class RecommenderServiceTest {
     @Test
     public void movieRecommendByGenreTest() throws IOException {
         // get genre list from assets file
-        List<String> genres =  FileUtil.loadGenreList(ctx.getAssets(), config.genreList);
+//        List<String> genres =  FileUtil.loadGenreList(ctx.getAssets(), config.genreList);
+        List<String> genres =  movieRecommender.getGenresForRecommend();
 
         // randomly select some genres from asset file
         Collections.shuffle(genres);

@@ -12,7 +12,7 @@ import com.group7.recommenderapp.entities.MusicItem;
 import com.group7.recommenderapp.service.MusicRecommender;
 import com.group7.recommenderapp.service.MusicConfig;
 import com.group7.recommenderapp.service.RecommenderService;
-import com.group7.recommenderapp.util.FileUtilMusic;
+import com.group7.recommenderapp.util.FileUtil;
 
 import org.junit.After;
 import org.junit.Before;
@@ -31,10 +31,10 @@ import java.util.Random;
  *
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
-public class RecommenderServiceTestMusic {
+public class MusicRecommenderServiceTest {
 
     private static final String CONFIG_PATH = "music_config.json";  // Default config path in assets.
-    private static final String TAG = "RecommenderServiceUnitTest";
+    private static final String TAG = "MusicRecommenderServiceTest";
     private static MusicConfig config;
     private static RecommenderService musicRecommender;
     private static final int RANDOM_BOUNDS = 10;
@@ -46,7 +46,7 @@ public class RecommenderServiceTestMusic {
         ctx = InstrumentationRegistry.getTargetContext();
 
         try {
-            config = FileUtilMusic.loadMovieConfig(ctx.getAssets(), CONFIG_PATH);
+            config = FileUtil.loadMusicConfig(ctx.getAssets(), CONFIG_PATH);
         } catch (IOException ex) {
             Log.e(TAG, String.format("Error occurs when loading config %s: %s.", CONFIG_PATH, ex));
         }
@@ -62,7 +62,7 @@ public class RecommenderServiceTestMusic {
     @Test
     public void musicRecommendByGenreTest() throws IOException {
         // get genre list from assets file
-        List<String> genres =  FileUtilMusic.loadGenreList(ctx.getAssets(), config.genreList);
+        List<String> genres =  musicRecommender.getGenresForRecommend();
 
         // randomly select some genres from asset file
         Collections.shuffle(genres);
@@ -106,7 +106,7 @@ public class RecommenderServiceTestMusic {
     @Test
     public void musicRecommendByItemTest() throws IOException {
         // get music list from assets file
-        List<MusicItem> music = (List<MusicItem>) FileUtilMusic.loadMusicList(ctx.getAssets(), config.musicList);
+        List<MusicItem> music = (List<MusicItem>) FileUtil.loadMusicList(ctx.getAssets(), config.musicList);
 
         // randomly select some genres from asset file
         Collections.shuffle(music);

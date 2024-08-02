@@ -3,7 +3,8 @@ package com.group7.recommenderapp.service;
 import android.content.Context;
 import android.util.Log;
 import androidx.annotation.WorkerThread;
-import com.group7.recommenderapp.util.FileUtilMusic;
+
+import com.group7.recommenderapp.util.FileUtil;
 import com.group7.recommenderapp.entities.MusicItem;
 import org.tensorflow.lite.Interpreter;
 import java.io.IOException;
@@ -49,7 +50,7 @@ public class MusicRecommender implements RecommenderService<MusicItem> {
 
     private void loadModel() {
         try {
-            ByteBuffer buffer = FileUtilMusic.loadModelFile(context.getAssets(), config.model);
+            ByteBuffer buffer = FileUtil.loadModelFile(context.getAssets(), config.model);
             modelInterpreter = new Interpreter(buffer);
             Log.i(TAG, "Music Model loaded");
         } catch (IOException e) {
@@ -60,7 +61,7 @@ public class MusicRecommender implements RecommenderService<MusicItem> {
     @WorkerThread
     private synchronized void loadCandidateList() {
         try {
-            Collection<MusicItem> collection = FileUtilMusic.loadMusicList(this.context.getAssets(), config.musicList);
+            Collection<MusicItem> collection = FileUtil.loadMusicList(this.context.getAssets(), config.musicList);
             candidates.clear();
             for (MusicItem item : collection) {
                 Log.d(TAG, String.format("Load candidate: %s", item));
@@ -75,7 +76,7 @@ public class MusicRecommender implements RecommenderService<MusicItem> {
     @WorkerThread
     private synchronized void loadGenreList() {
         try {
-            List<String> genreList = FileUtilMusic.loadGenreList(this.context.getAssets(), config.genreList);
+            List<String> genreList = FileUtil.loadGenreList(this.context.getAssets(), config.genreList);
             genres.clear();
             for (String genre : genreList) {
                 Log.d(TAG, String.format("Load genre: \"%s\"", genre));
@@ -93,6 +94,11 @@ public class MusicRecommender implements RecommenderService<MusicItem> {
             modelInterpreter.close();
             modelInterpreter = null;
         }
+    }
+
+    @Override
+    public List<String> getGenresForRecommend() throws IOException {
+        return FileUtil.loadGenreList(context.getAssets(), config.genreList);
     }
 
     private int[] preprocessIds(List<MusicItem> selectedMusic, int length) {
