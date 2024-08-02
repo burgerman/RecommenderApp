@@ -71,41 +71,13 @@ public class DatabaseManager {
     public static Database getDatabase() {
         return database;
     }
-
-
-    // tag::userProfileDocId[]
     public String getCurrentUserDocId() {
         return UserUtils.generateUserDocId(currentUser);
     }
-    // end::userProfileDocId[]
 
-    // tag::openOrCreateDatabase[]
-    public void openOrCreateDatabaseForUser(Context context, String userName)
-    // end::openOrCreateDatabase[]
-    {
-        // tag::databaseConfiguration[]
-        DatabaseConfiguration config = new DatabaseConfiguration();
-        config.setDirectory(String.format("%s/%s", context.getFilesDir(), DB_USER));
-        // end::databaseConfiguration[]
-
-        currentUser = userName;
-
-        try {
-            // tag::createDatabase[]
-            database = new Database(DATABASE_NAME, config);
-            // end::createDatabase[]
-            registerForDatabaseChanges();
-        } catch (CouchbaseLiteException e) {
-            e.printStackTrace();
-        }
-    }
-
-    // tag::registerForDatabaseChanges[]
     private void registerForDatabaseChanges()
-    // end::registerForDatabaseChanges[]
     {
-        // tag::addDatabaseChangelistener[]
-        // Add database change listener
+
         listenerToken = database.addChangeListener(change -> {
             if (change != null) {
                 for(String docId : change.getDocumentIDs()) {
@@ -116,34 +88,24 @@ public class DatabaseManager {
                 }
             }
         });
-        // end::addDatabaseChangelistener[]
     }
 
-    // tag::closeDatabaseForUser[]
     public void closeDatabaseForUser()
-    // end::closeDatabaseForUser[]
     {
         try {
             if (database != null) {
                 deregisterForDatabaseChanges();
-                // tag::closeDatabase[]
                 database.close();
-                // end::closeDatabase[]
                 database = null;
             }
         } catch (CouchbaseLiteException e) {
             e.printStackTrace();
         }
     }
-
-    // tag::deregisterForDatabaseChanges[]
     private void deregisterForDatabaseChanges()
-    // end::deregisterForDatabaseChanges[]
     {
         if (listenerToken != null) {
-            // tag::removedbchangelistener[]
             database.removeChangeListener(listenerToken);
-            // end::removedbchangelistener[]
         }
     }
 }
