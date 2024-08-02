@@ -74,7 +74,10 @@ public class DatabaseManager {
     public String getCurrentUserDocId() {
         return UserUtils.generateUserDocId(currentUser);
     }
-
+    public void setCurrentUser(String user)
+    {
+        this.currentUser = user;
+    }
     private void registerForDatabaseChanges()
     {
 
