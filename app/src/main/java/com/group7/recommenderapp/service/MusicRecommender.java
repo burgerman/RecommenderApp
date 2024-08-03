@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 
 public class MusicRecommender implements RecommenderService<MusicItem> {
     private static final String TAG = "MusicBasedRecommender";
+    private static final String CONFIG_PATH = "music_config.json";  // Default config path in assets.
 
     private Interpreter modelInterpreter;
     private final Map<Integer, MusicItem> candidates = new HashMap<>();
@@ -24,17 +25,17 @@ public class MusicRecommender implements RecommenderService<MusicItem> {
 
     private static RecommenderService musicRecommenderInstance = null;
 
-    private MusicRecommender(Context context, MusicConfig config) {
+    private MusicRecommender(Context context) throws IOException {
         this.context = context;
-        this.config = config;
+        this.config = FileUtil.loadMusicConfig(context.getAssets(), CONFIG_PATH);
         if (!config.validate()) {
             Log.e(TAG, "Config is not valid.");
         }
     }
 
-    public static synchronized RecommenderService getInstance(Context ctx, MusicConfig config) {
+    public static synchronized RecommenderService getInstance(Context ctx) throws IOException {
         if (musicRecommenderInstance == null) {
-            musicRecommenderInstance = new MusicRecommender(ctx, config);
+            musicRecommenderInstance = new MusicRecommender(ctx);
         }
         return musicRecommenderInstance;
     }

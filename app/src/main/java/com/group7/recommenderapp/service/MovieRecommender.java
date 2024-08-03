@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 
 public class MovieRecommender implements RecommenderService<MovieItem> {
     private static final String TAG = "MovieBasedRecommender";
+    private static final String CONFIG_PATH = "movie_config.json";  // Default config path in assets.
 
     private Interpreter modelInterpreter;
     final Map<Integer, MovieItem> candidates = new HashMap<>();
@@ -23,18 +24,18 @@ public class MovieRecommender implements RecommenderService<MovieItem> {
 
     private static RecommenderService movieRecommenderInstance = null;
 
-    private MovieRecommender(Context context, MovieConfig config) {
+    private MovieRecommender(Context context) throws IOException {
         this.context = context;
-        this.config = config;
+        this.config = FileUtil.loadMovieConfig(context.getAssets(), CONFIG_PATH);
         if (!config.validate()) {
             Log.e(TAG, "Config is not valid.");
         }
     }
 
-    public static RecommenderService getInstance(Context ctx, MovieConfig config) {
+    public static RecommenderService getInstance(Context ctx) throws IOException {
         synchronized (MovieRecommender.class) {
             if(movieRecommenderInstance == null) {
-                movieRecommenderInstance = new MovieRecommender(ctx, config);
+                movieRecommenderInstance = new MovieRecommender(ctx);
             }
         }
         return movieRecommenderInstance;

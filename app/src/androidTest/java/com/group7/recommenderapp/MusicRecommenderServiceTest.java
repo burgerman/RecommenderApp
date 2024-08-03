@@ -32,10 +32,8 @@ import java.util.Random;
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
 public class MusicRecommenderServiceTest {
-
-    private static final String CONFIG_PATH = "music_config.json";  // Default config path in assets.
     private static final String TAG = "MusicRecommenderServiceTest";
-    private static MusicConfig config;
+
     private static RecommenderService musicRecommender;
     private static final int RANDOM_BOUNDS = 10;
     private Context ctx;
@@ -46,12 +44,11 @@ public class MusicRecommenderServiceTest {
         ctx = InstrumentationRegistry.getTargetContext();
 
         try {
-            config = FileUtil.loadMusicConfig(ctx.getAssets(), CONFIG_PATH);
+            musicRecommender = MusicRecommender.getInstance(ctx);
+            musicRecommender.load();
         } catch (IOException ex) {
-            Log.e(TAG, String.format("Error occurs when loading config %s: %s.", CONFIG_PATH, ex));
+            Log.e(TAG, String.format("Error occurs when loading MusicRecommender config."), ex);
         }
-        musicRecommender = MusicRecommender.getInstance(ctx, config);
-        musicRecommender.load();
     }
 
     @After
@@ -106,7 +103,7 @@ public class MusicRecommenderServiceTest {
     @Test
     public void musicRecommendByItemTest() throws IOException {
         // get music list from assets file
-        List<MusicItem> music = (List<MusicItem>) FileUtil.loadMusicList(ctx.getAssets(), config.musicList);
+        List<MusicItem> music = (List<MusicItem>) FileUtil.loadMusicList(ctx.getAssets(), "sorted_music_vocab.json");
 
         // randomly select some genres from asset file
         Collections.shuffle(music);

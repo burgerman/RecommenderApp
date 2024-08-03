@@ -7,6 +7,8 @@ import com.group7.recommenderapp.service.MovieRecommender;
 import com.group7.recommenderapp.service.MusicConfig;
 import com.group7.recommenderapp.service.RecommenderService;
 import com.group7.recommenderapp.service.MusicRecommender;
+
+import java.io.IOException;
 import java.util.List;
 
 public class HomePresenter implements HomeContract.Presenter {
@@ -18,8 +20,12 @@ public class HomePresenter implements HomeContract.Presenter {
     public HomePresenter(HomeContract.View view, Context context) {
         this.view = view;
         this.context = context;
-        this.movieRecommenderService = MovieRecommender.getInstance(context, new MovieConfig());
-        this.musicRecommenderService = MusicRecommender.getInstance(context, new MusicConfig()); // Assuming similar config for music
+        try {
+            this.movieRecommenderService = MovieRecommender.getInstance(context);
+            this.musicRecommenderService = MusicRecommender.getInstance(context); // Assuming similar config for music
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

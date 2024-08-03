@@ -5,6 +5,8 @@ import com.group7.recommenderapp.entities.MovieItem;
 import com.group7.recommenderapp.service.MovieConfig;
 import com.group7.recommenderapp.service.MovieRecommender;
 import com.group7.recommenderapp.service.RecommenderService;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +18,11 @@ public class MoviePresenter implements MovieContract.Presenter {
     public MoviePresenter(MovieContract.View view, Context context) {
         this.view = view;
         this.context = context;
-        this.movieRecommender = MovieRecommender.getInstance(context, new MovieConfig());
+        try {
+            this.movieRecommender = MovieRecommender.getInstance(context);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

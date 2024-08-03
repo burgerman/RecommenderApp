@@ -5,6 +5,8 @@ import com.group7.recommenderapp.entities.MusicItem;
 import com.group7.recommenderapp.service.MusicConfig;
 import com.group7.recommenderapp.service.MusicRecommender;
 import com.group7.recommenderapp.service.RecommenderService;
+
+import java.io.IOException;
 import java.util.List;
 
 public class MusicPresenter implements MusicContract.Presenter {
@@ -16,8 +18,12 @@ public class MusicPresenter implements MusicContract.Presenter {
         this.view = view;
         this.context = context;
         // Initialize MusicRecommender
-        MusicConfig config = new MusicConfig();
-        this.musicRecommender = MusicRecommender.getInstance(context, config);
+//        MusicConfig config = new MusicConfig();
+        try {
+            this.musicRecommender = MusicRecommender.getInstance(context);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

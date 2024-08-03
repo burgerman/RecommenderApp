@@ -32,9 +32,7 @@ import java.util.Random;
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
 public class MovieRecommenderServiceTest {
-    private static final String CONFIG_PATH = "movie_config.json";  // Default config path in assets.
     private static final String TAG = "MovieRecommenderServiceTest";
-    private static MovieConfig config;
     private static RecommenderService movieRecommender;
     private static final int RANDOM_BOUNDS = 10;
     private Context ctx;
@@ -43,14 +41,12 @@ public class MovieRecommenderServiceTest {
     @Before
     public void setUp() {
         ctx = InstrumentationRegistry.getTargetContext();
-
         try {
-            config = FileUtil.loadMovieConfig(ctx.getAssets(), CONFIG_PATH);
+            movieRecommender = MovieRecommender.getInstance(ctx);
+            movieRecommender.load();
         } catch (IOException ex) {
-            Log.e(TAG, String.format("Error occurs when loading config %s: %s.", CONFIG_PATH, ex));
+            Log.e(TAG, String.format("Error occurs when loading MovieRecommender config."), ex);
         }
-        movieRecommender = MovieRecommender.getInstance(ctx, config);
-        movieRecommender.load();
     }
 
     @After
@@ -106,7 +102,7 @@ public class MovieRecommenderServiceTest {
     @Test
     public void movieRecommendByItemTest() throws IOException {
         // get movie list from assets file
-        List<MovieItem> movies = (List<MovieItem>) FileUtil.loadMovieList(ctx.getAssets(), config.movieList);
+        List<MovieItem> movies = (List<MovieItem>) FileUtil.loadMovieList(ctx.getAssets(), "sorted_movie_vocab.json");
 
         // randomly select some genres from asset file
         Collections.shuffle(movies);
