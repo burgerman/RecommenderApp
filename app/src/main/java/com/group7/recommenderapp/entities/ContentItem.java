@@ -31,8 +31,8 @@ public class ContentItem implements Parcelable {
      * Content item score, which will be viewed as public consensus of the heat of content
      * when it is deserialized from file, some transition in property name(count=>score) will occur
      */
-    @SerializedName(value = "count")
-    private int score;
+    @SerializedName(value = "avg_rating")
+    private float score;
     /**
      * denote if content item is selected by user
      */
@@ -93,11 +93,11 @@ public class ContentItem implements Parcelable {
         this.genres = genres;
     }
 
-    public int getScore() {
+    public float getScore() {
         return score;
     }
 
-    public void setScore(int score) {
+    public void setScore(float score) {
         this.score = score;
     }
 
@@ -119,7 +119,7 @@ public class ContentItem implements Parcelable {
     @Override
     public String toString() {
         return String.format(Locale.CANADA,
-                "Id: %d, title: %s, genres: %s, score: %d, selected: %s, confidence: %.2f",
+                "Id: %d, title: %s, genres: %s, score: %f, selected: %s, confidence: %.2f",
                 id, title, TextUtils.join(JOINER, genres), score, isSelected, confidence);
     }
 
@@ -135,7 +135,7 @@ public class ContentItem implements Parcelable {
         dest.writeString(title);
         dest.writeList(genres);
         dest.writeFloat(confidence);
-        dest.writeInt(score);
+        dest.writeFloat(score);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             dest.writeBoolean(isSelected);
         }
