@@ -14,7 +14,7 @@
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
         <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
+            android:id="@+id/toolbar_movie"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
@@ -22,8 +22,43 @@
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
             app:title="@string/movies">
 
+            <ImageView
+                android:id="@+id/homeIcon_movie"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_home"
+                android:padding="16dp"
+                android:contentDescription="@string/home_icon" />
+
+            <ImageView
+                android:id="@+id/movieicon_movie"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_movies"
+                android:padding="16dp"
+                android:layout_marginStart="16dp"
+                android:contentDescription="@string/movie_icon" />
+
+            <ImageView
+                android:id="@+id/musicicon_movie"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_music"
+                android:padding="16dp"
+                android:layout_marginStart="16dp"
+                android:contentDescription="@string/music_icon" />
+
+            <ImageView
+                android:id="@+id/profileicon_movie"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_profile"
+                android:padding="16dp"
+                android:layout_marginStart="16dp"
+                android:contentDescription="@string/profile_icon" />
+
             <ImageButton
-                android:id="@+id/heartButton"
+                android:id="@+id/heartButton_movie"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
@@ -61,7 +96,7 @@
             android:elevation="4dp"/>
 
         <ProgressBar
-            android:id="@+id/progressBar"
+            android:id="@+id/progressBar_movie"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -70,7 +105,7 @@
     </LinearLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/feedbackButton"
+        android:id="@+id/feedbackButton_movie"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
@@ -79,7 +114,7 @@
         android:backgroundTint="?attr/colorPrimary" />
 
     <LinearLayout
-        android:id="@+id/feedbackContainer"
+        android:id="@+id/feedbackContainer_movie"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center_horizontal"
@@ -90,7 +125,7 @@
         android:elevation="4dp">
 
         <EditText
-            android:id="@+id/feedbackEditText"
+            android:id="@+id/feedbackEditText_movie"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Enter your feedback"
@@ -98,7 +133,7 @@
             android:layout_marginBottom="8dp" />
 
         <Button
-            android:id="@+id/submitFeedbackButton"
+            android:id="@+id/submitFeedbackButton_movie"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Submit"

@@ -86,6 +86,21 @@ public class MovieFragment extends Fragment implements MovieContract.View {
     }
 
     @Override
+    public void navigateToHomeTap() {
+
+    }
+
+    @Override
+    public void navigateToMusicTap() {
+
+    }
+
+    @Override
+    public void navigateToProfile() {
+
+    }
+
+    @Override
     public void showMessage(String message) {
         // This method is handled in MovieActivity
     }

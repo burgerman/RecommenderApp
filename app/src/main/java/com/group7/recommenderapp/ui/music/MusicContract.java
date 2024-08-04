@@ -13,6 +13,9 @@ public interface MusicContract {
         void updateHeartButton(boolean isFilled);
         void showFeedbackSubmitted();
         void showMusicDetails(MusicItem music);
+        void navigateToHomeTap();
+        void navigateToMovieTap();
+        void navigateToProfile();
     }
 
     interface Presenter {
@@ -20,5 +23,9 @@ public interface MusicContract {
         void onMusicItemClicked(ContentItem music);
         void onHeartButtonClicked();
         void onFeedbackSubmitted(String feedback);
+
+        void onHomeIconClicked();
+        void onMovieIconClicked();
+        void onProfileIconClicked();
     }
 }

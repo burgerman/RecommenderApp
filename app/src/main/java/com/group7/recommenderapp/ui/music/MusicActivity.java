@@ -1,9 +1,11 @@
 package com.group7.recommenderapp.ui.music;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -16,6 +18,10 @@ import com.google.android.material.snackbar.Snackbar;
 import com.group7.recommenderapp.R;
 import com.group7.recommenderapp.entities.ContentItem;
 import com.group7.recommenderapp.entities.MusicItem;
+import com.group7.recommenderapp.ui.home.HomeActivity;
+import com.group7.recommenderapp.ui.movie.MovieActivity;
+import com.group7.recommenderapp.ui.profile.UserProfileActivity;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,15 +42,18 @@ public class MusicActivity extends AppCompatActivity implements MusicContract.Vi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_music);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar_music);
         setSupportActionBar(toolbar);
+        ImageView homeIcon = findViewById(R.id.homeIcon_music);
+        ImageView movieIcon = findViewById(R.id.movieicon_music);
+        ImageView profileIcon = findViewById(R.id.profileicon_music);
 
         musicRecyclerView = findViewById(R.id.musicRecyclerView);
-        progressBar = findViewById(R.id.progressBar);
-        heartButton = findViewById(R.id.heartButton);
-        feedbackButton = findViewById(R.id.feedbackButton);
-        feedbackContainer = findViewById(R.id.feedbackContainer);
-        feedbackEditText = findViewById(R.id.feedbackEditText);
+        progressBar = findViewById(R.id.progressBar_music);
+        heartButton = findViewById(R.id.heartButton_music);
+        feedbackButton = findViewById(R.id.feedbackButton_music);
+        feedbackContainer = findViewById(R.id.feedbackContainer_music);
+        feedbackEditText = findViewById(R.id.feedbackEditText_music);
         musicDetailsTextView = findViewById(R.id.musicDetailsTextView);
 
         presenter = new MusicPresenter(this, this);
@@ -52,7 +61,9 @@ public class MusicActivity extends AppCompatActivity implements MusicContract.Vi
         setupRecyclerView();
         setupHeartButton();
         setupFeedbackButton();
-
+        homeIcon.setOnClickListener(v -> presenter.onHomeIconClicked());
+        movieIcon.setOnClickListener(v -> presenter.onMovieIconClicked());
+        profileIcon.setOnClickListener(v -> presenter.onProfileIconClicked());
         presenter.loadMusic();
     }
 
@@ -72,7 +83,7 @@ public class MusicActivity extends AppCompatActivity implements MusicContract.Vi
             feedbackButton.setVisibility(View.GONE);
         });
 
-        findViewById(R.id.submitFeedbackButton).setOnClickListener(v -> {
+        findViewById(R.id.submitFeedbackButton_music).setOnClickListener(v -> {
             String feedback = feedbackEditText.getText().toString();
             presenter.onFeedbackSubmitted(feedback);
             feedbackEditText.setText("");
@@ -117,5 +128,23 @@ public class MusicActivity extends AppCompatActivity implements MusicContract.Vi
                 music.getTitle(), music.getGenres(), music.getScore());
         musicDetailsTextView.setText(details);
         musicDetailsTextView.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void navigateToHomeTap() {
+        Intent intent = new Intent(this, HomeActivity.class);
+        startActivity(intent);
+    }
+
+    @Override
+    public void navigateToMovieTap() {
+        Intent intent = new Intent(this, MovieActivity.class);
+        startActivity(intent);
+    }
+
+    @Override
+    public void navigateToProfile() {
+        Intent intent = new Intent(this, UserProfileActivity.class);
+        startActivity(intent);
     }
 }

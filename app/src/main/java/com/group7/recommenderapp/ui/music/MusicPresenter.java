@@ -54,5 +54,18 @@ public class MusicPresenter implements MusicContract.Presenter {
     public void onFeedbackSubmitted(String feedback) {
 
     }
+    @Override
+    public void onHomeIconClicked() {
+        view.navigateToHomeTap();
+    }
 
+    @Override
+    public void onMovieIconClicked() {
+        view.navigateToMovieTap();
+    }
+
+    @Override
+    public void onProfileIconClicked() {
+        view.navigateToProfile();
+    }
 }

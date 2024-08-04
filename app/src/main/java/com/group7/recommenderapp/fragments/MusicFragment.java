@@ -102,4 +102,19 @@ public class MusicFragment extends Fragment implements MusicContract.View {
     public void showMusicDetails(MusicItem music) {
 
     }
+
+    @Override
+    public void navigateToHomeTap() {
+
+    }
+
+    @Override
+    public void navigateToMovieTap() {
+
+    }
+
+    @Override
+    public void navigateToProfile() {
+
+    }
 }

@@ -53,4 +53,19 @@ public class MoviePresenter implements MovieContract.Presenter {
     public void onFeedbackSubmitted(String feedback) {
 
     }
+
+    @Override
+    public void onHomeIconClicked() {
+        view.navigateToHomeTap();
+    }
+
+    @Override
+    public void onMusicIconClicked() {
+        view.navigateToMusicTap();
+    }
+
+    @Override
+    public void onProfileIconClicked() {
+        view.navigateToProfile();
+    }
 }
