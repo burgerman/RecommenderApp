@@ -15,7 +15,7 @@ public interface PreferenceSelectionContract {
 
     interface Presenter {
         void savePreferences(String userId, List<String> moviePreferences, List<String> musicPreferences, Bundle additionalPreferences);
-        void loadExistingPreferences(String userId);
+        void loadExistingPreferences();
         List<String> getMovieGenres();
         List<String> getMusicGenres();
     }

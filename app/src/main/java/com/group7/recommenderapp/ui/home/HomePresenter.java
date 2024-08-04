@@ -38,14 +38,34 @@ public class HomePresenter implements HomeContract.Presenter {
         List<ContentItem> recommendedMovies = movieRecommenderService.recommendByGenre(null); // Replace null with actual genres
         ResultSet movieResultSet = new ResultSet();
         movieResultSet.setItemset(recommendedMovies);
-        view.showRecommendedContent(movieResultSet.getTopK(10));
+        view.showRecommendedMovieContent(movieResultSet.getTopK(10));
 
         // Load music recommendations
         List<ContentItem> recommendedMusic = musicRecommenderService.recommendByGenre(null); // Replace null with actual genres
         ResultSet musicResultSet = new ResultSet();
         musicResultSet.setItemset(recommendedMusic);
-        view.showRecommendedContent(musicResultSet.getTopK(10));
+        view.showRecommendedMusicContent(musicResultSet.getTopK(10));
 
         view.hideLoading();
+    }
+
+    @Override
+    public void onHomeIconClicked() {
+
+    }
+
+    @Override
+    public void onMovieIconClicked() {
+        view.navigateToMovieTap();
+    }
+
+    @Override
+    public void onMusicIconClicked() {
+        view.navigateToMusicTap();
+    }
+
+    @Override
+    public void onProfileIconClicked() {
+        view.navigateToProfile();
     }
 }

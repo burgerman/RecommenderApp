@@ -1,6 +1,11 @@
 package com.group7.recommenderapp.entities;
 
+import android.os.Build;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.text.TextUtils;
+
+import androidx.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -8,7 +13,7 @@ import java.util.List;
 import java.util.Locale;
 
 
-public class ContentItem {
+public class ContentItem implements Parcelable {
 
     /**
      * Content item id
@@ -40,6 +45,29 @@ public class ContentItem {
 
     public static final String JOINER = " | ";
     public static final String DELIMITER = "[|]";
+
+    public ContentItem() {
+    }
+    protected ContentItem(Parcel in) {
+        id = in.readInt();
+        title = in.readString();
+        genres = in.createStringArrayList();
+        score = in.readInt();
+        isSelected = in.readByte() != 0;
+        confidence = in.readFloat();
+    }
+
+    public static final Creator<ContentItem> CREATOR = new Creator<ContentItem>() {
+        @Override
+        public ContentItem createFromParcel(Parcel in) {
+            return new ContentItem(in);
+        }
+
+        @Override
+        public ContentItem[] newArray(int size) {
+            return new ContentItem[size];
+        }
+    };
 
     public int getId() {
         return id;
@@ -96,4 +124,20 @@ public class ContentItem {
     }
 
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(@NonNull Parcel dest, int flags) {
+        dest.writeInt(id);
+        dest.writeString(title);
+        dest.writeList(genres);
+        dest.writeFloat(confidence);
+        dest.writeInt(score);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            dest.writeBoolean(isSelected);
+        }
+    }
 }

@@ -57,18 +57,23 @@ public class PreferenceSelectionPresenter implements PreferenceSelectionContract
         Map<String, Object> preferences = new HashMap<>();
         preferences.put("categoriesClass1", moviePreferences);
         preferences.put("categoriesClass2", musicPreferences);
+        preferences.put("additionalMoviePreferences", additionalPreferences.get("additionalMoviePreferences"));
+        preferences.put("additionalMusicPreferences", additionalPreferences.get("additionalMusicPreferences"));
+        preferences.put("LikedMovieList", null);
+        preferences.put("LikedMusicList", null);
         userInfo.put("preferences", preferences);
-        UserService.getUserServiceInstance(getApplicationContext()).createOrUpdateUserProfile(userInfo);
+        UserService.getUserServiceInstance(context).createOrUpdateUserProfile(userInfo);
 
         view.hideLoading();
         view.showPreferencesSaved();
     }
 
     @Override
-    public void loadExistingPreferences(String userId) {
+    public void loadExistingPreferences() {
         view.showLoading();
+        UserService us = UserService.getUserServiceInstance(context);
 
-        UserProfile userProfile = userProfileDao.getUserProfile(userId);
+        UserProfile userProfile = us.selectUserProfile(us.getCurrentUser());
         if (userProfile != null && userProfile.getPreferences() != null) {
             List<String> moviePreferences = (List<String>) userProfile.getPreferences().getPreferenceDict().get("categoriesClass2");
             List<String> musicPreferences = (List<String>) userProfile.getPreferences().getPreferenceDict().get("categoriesClass1");

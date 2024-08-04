@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.group7.recommenderapp.R;
+import com.group7.recommenderapp.entities.ContentItem;
 import com.group7.recommenderapp.entities.MovieItem;
 import java.util.ArrayList;
 import java.util.List;
@@ -81,7 +82,7 @@ public class MovieActivity extends AppCompatActivity implements MovieContract.Vi
     }
 
     @Override
-    public void showMovies(List<MovieItem> movies) {
+    public void showMovies(List<ContentItem> movies) {
         movieAdapter.setMovies(movies);
     }
 

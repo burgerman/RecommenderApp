@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.group7.recommenderapp.R;
+import com.group7.recommenderapp.entities.ContentItem;
 import com.group7.recommenderapp.entities.MusicItem;
 import java.util.ArrayList;
 import java.util.List;
@@ -81,7 +82,7 @@ public class MusicActivity extends AppCompatActivity implements MusicContract.Vi
     }
 
     @Override
-    public void showMusic(List<MusicItem> music) {
+    public void showMusic(List<ContentItem> music) {
         musicAdapter.setMusic(music);
     }
 

@@ -5,13 +5,25 @@ import java.util.List;
 
 public interface HomeContract {
     interface View {
-        void showRecommendedContent(List<ContentItem> content);
         void showError(String message);
         void showLoading();
         void hideLoading();
+
+        void showRecommendedMovieContent(List<ContentItem> content);
+        void showRecommendedMusicContent(List<ContentItem> content);
+
+        void showProgress();
+        void hideProgress();
+        void navigateToMovieTap();
+        void navigateToMusicTap();
+        void navigateToProfile();
     }
 
     interface Presenter {
         void loadRecommendedContent();
+        void onHomeIconClicked();
+        void onMovieIconClicked();
+        void onMusicIconClicked();
+        void onProfileIconClicked();
     }
 }

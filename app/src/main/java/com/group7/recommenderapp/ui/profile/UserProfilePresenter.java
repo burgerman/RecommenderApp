@@ -23,21 +23,22 @@ public class UserProfilePresenter implements UserProfileContract.Presenter {
     private UserProfileContract.View view;
     private Context context;
 
-    public UserProfilePresenter(UserProfileContract.View view) {
+    public UserProfilePresenter(UserProfileContract.View view, Context context) {
         this.view = view;
-        this.context = (Context) view;
+        this.context = context;
     }
 
     @Override
     public void loadUserProfile() {
-        String username = UserService.getUserServiceInstance(getApplicationContext()).getCurrentUser();
-        User user = UserService.getUserServiceInstance(getApplicationContext()).selectUser(username);
-        UserProfile userProfile = UserService.getUserServiceInstance(getApplicationContext()).selectUserProfile(username);
+        UserService us =  UserService.getUserServiceInstance(context);
+        String username = us.getCurrentUser();
+        User user = us.selectUser(username);
+        UserProfile userProfile = us.selectUserProfile(username);
         user.setProfile(userProfile);
         if (userProfile != null) {
             view.displayUserProfile(userProfile);
         } else {
-            view.showError("Failed to load user profile");
+            view.showError("User Profile Not Found in DB");
         }
     }
 
@@ -45,12 +46,9 @@ public class UserProfilePresenter implements UserProfileContract.Presenter {
         // Prepare the user info map with additional genres
         prepareUserInfoWithAdditionalGenres(userInfo);
 
-        UserService.getUserServiceInstance(getApplicationContext()).createOrUpdateUserProfile(userInfo);
+        UserService.getUserServiceInstance(context).createOrUpdateUserProfile(userInfo);
         view.showProfileUpdateSuccess();
         loadUserProfile();
-
-        // Download content files after updating profile
-        downloadContentFile();
     }
 
     private void prepareUserInfoWithAdditionalGenres(Map<String, Object> userInfo) {
@@ -75,11 +73,4 @@ public class UserProfilePresenter implements UserProfileContract.Presenter {
         }
     }
 
-
-    private void downloadContentFile() {
-        String movieContentFile = context.getExternalFilesDir(null).toString() + "/" + FileUtil.LOCAL_MOVIE_CONTENT_FILE_NAME;
-        String musicContentFile = context.getExternalFilesDir(null).toString() + "/" + FileUtil.LOCAL_MUSIC_CONTENT_FILE_NAME;
-        new FileUtil.DownloadFileTask().execute(FileUtil.MUSIC_CONTENT_FILE_URL, musicContentFile);
-        new FileUtil.DownloadFileTask().execute(FileUtil.MOVIE_CONTENT_FILE_URL, movieContentFile);
-    }
 }

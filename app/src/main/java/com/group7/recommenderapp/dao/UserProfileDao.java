@@ -29,7 +29,7 @@ public class UserProfileDao {
         doc.setString("gender", userProfile.getGender());
         doc.setInt("age", userProfile.getAge());
         if (userProfile.getPreferences() != null) {
-            doc.setString("preferredLanguage", userProfile.getPreferences().getPreferredLanguage());
+            doc.setString("language", userProfile.getPreferences().getPreferredLanguage());
             doc.setString("class1", userProfile.getPreferences().getClass1());
             doc.setString("class2", userProfile.getPreferences().getClass2());
             if(userProfile.getPreferences().getPreferenceDict()!=null) {

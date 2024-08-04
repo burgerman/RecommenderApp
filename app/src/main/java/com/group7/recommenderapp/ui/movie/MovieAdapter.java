@@ -8,15 +8,16 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.group7.recommenderapp.R;
+import com.group7.recommenderapp.entities.ContentItem;
 import com.group7.recommenderapp.entities.MovieItem;
 import java.util.List;
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
 
-    private List<MovieItem> movies;
+    private List<ContentItem> movies;
     private OnMovieItemClickListener listener;
 
-    public MovieAdapter(List<MovieItem> movies, OnMovieItemClickListener listener) {
+    public MovieAdapter(List<ContentItem> movies, OnMovieItemClickListener listener) {
         this.movies = movies;
         this.listener = listener;
     }
@@ -30,7 +31,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
 
     @Override
     public void onBindViewHolder(@NonNull MovieViewHolder holder, int position) {
-        MovieItem movie = movies.get(position);
+        ContentItem movie = movies.get(position);
         holder.bind(movie, listener);
     }
 
@@ -39,7 +40,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         return movies.size();
     }
 
-    public void setMovies(List<MovieItem> movies) {
+    public void setMovies(List<ContentItem> movies) {
         this.movies = movies;
         notifyDataSetChanged();
     }
@@ -58,7 +59,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
             selectCheckBox = itemView.findViewById(R.id.selectCheckBox);
         }
 
-        void bind(final MovieItem movie, final OnMovieItemClickListener listener) {
+        void bind(final ContentItem movie, final OnMovieItemClickListener listener) {
             titleTextView.setText(movie.getTitle());
             genreTextView.setText(movie.getGenres().toString());
             ratingTextView.setText(String.format("Rating: %.1f", movie.getScore()));
@@ -72,6 +73,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
     }
 
     public interface OnMovieItemClickListener {
-        void onMovieItemClick(MovieItem movie);
+        void onMovieItemClick(ContentItem movie);
     }
 }

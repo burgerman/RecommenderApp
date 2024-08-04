@@ -45,6 +45,11 @@
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
 
         <activity
+            android:name=".ui.music.MusicActivity"
+            android:label="@string/music"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+
+        <activity
             android:name=".ui.home.HomeActivity"
             android:label="@string/home"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"

@@ -8,15 +8,16 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.group7.recommenderapp.R;
+import com.group7.recommenderapp.entities.ContentItem;
 import com.group7.recommenderapp.entities.MusicItem;
 import java.util.List;
 
 public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MusicViewHolder> {
 
-    private List<MusicItem> music;
+    private List<ContentItem> music;
     private OnMusicItemClickListener listener;
 
-    public MusicAdapter(List<MusicItem> music, OnMusicItemClickListener listener) {
+    public MusicAdapter(List<ContentItem> music, OnMusicItemClickListener listener) {
         this.music = music;
         this.listener = listener;
     }
@@ -30,7 +31,7 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MusicViewHol
 
     @Override
     public void onBindViewHolder(@NonNull MusicViewHolder holder, int position) {
-        MusicItem musicItem = music.get(position);
+        ContentItem musicItem = music.get(position);
         holder.bind(musicItem, listener);
     }
 
@@ -39,7 +40,7 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MusicViewHol
         return music.size();
     }
 
-    public void setMusic(List<MusicItem> music) {
+    public void setMusic(List<ContentItem> music) {
         this.music = music;
         notifyDataSetChanged();
     }
@@ -57,7 +58,7 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MusicViewHol
             selectCheckBox = itemView.findViewById(R.id.selectCheckBox);
         }
 
-        void bind(final MusicItem music, final OnMusicItemClickListener listener) {
+        void bind(final ContentItem music, final OnMusicItemClickListener listener) {
             titleTextView.setText(music.getTitle());
             genreTextView.setText(music.getGenres().toString());
 
@@ -70,6 +71,6 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MusicViewHol
     }
 
     public interface OnMusicItemClickListener {
-        void onMusicItemClick(MusicItem music);
+        void onMusicItemClick(ContentItem music);
     }
 }

@@ -1,6 +1,7 @@
 package com.group7.recommenderapp.fragments;
 
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.group7.recommenderapp.R;
+import com.group7.recommenderapp.entities.ContentItem;
 import com.group7.recommenderapp.entities.MovieItem;
 import com.group7.recommenderapp.ui.movie.MovieAdapter;
 import com.group7.recommenderapp.ui.movie.MovieContract;
@@ -25,6 +27,16 @@ public class MovieFragment extends Fragment implements MovieContract.View {
     private ProgressBar progressBar;
     private MovieContract.Presenter presenter;
     private MovieAdapter movieAdapter;
+
+    public static final String MOVIE_RECOMMEND_FRAG = "movie_recommend_general";
+
+    public static MovieFragment newInstance(List<ContentItem> recommendations) {
+        MovieFragment fragment = new MovieFragment();
+        Bundle args = new Bundle();
+        args.putParcelableArrayList(MOVIE_RECOMMEND_FRAG, (ArrayList<? extends Parcelable>) new ArrayList<>(recommendations));
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Nullable
     @Override
@@ -49,7 +61,7 @@ public class MovieFragment extends Fragment implements MovieContract.View {
         recyclerView.setAdapter(movieAdapter);
     }
 
-    public void showMovies(List<MovieItem> movies) {
+    public void showMovies(List<ContentItem> movies) {
         movieAdapter.setMovies(movies);
     }
 

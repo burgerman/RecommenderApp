@@ -40,7 +40,7 @@ public class UserProfileActivity extends AppCompatActivity implements UserProfil
         setContentView(R.layout.activity_user_profile);
 
         initViews();
-        presenter = new UserProfilePresenter(this);
+        presenter = new UserProfilePresenter(this, this);
         presenter.loadUserProfile();
 
 
@@ -58,7 +58,7 @@ public class UserProfileActivity extends AppCompatActivity implements UserProfil
         musicPreferencesButton = findViewById(R.id.musicPreferencesButton);
         genreRecyclerView = findViewById(R.id.genreRecyclerView);
         likedItemsRecyclerView = findViewById(R.id.likedItemsRecyclerView);
-
+        presenter = new UserProfilePresenter(this, this);
         profileImage.setImageResource(R.mipmap.profile_placeholder);
 
         saveButton.setOnClickListener(v -> saveProfile());

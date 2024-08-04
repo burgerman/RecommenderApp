@@ -17,6 +17,7 @@ import com.group7.recommenderapp.service.MusicRecommender;
 import com.group7.recommenderapp.ui.home.HomeActivity;
 import com.group7.recommenderapp.util.DatabaseManager;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class PreferenceSelectionActivity extends AppCompatActivity implements PreferenceSelectionContract.View {
@@ -67,14 +68,14 @@ public class PreferenceSelectionActivity extends AppCompatActivity implements Pr
                 String additionalMusicPreference = musicGenreInput.getText().toString();
 
                 Bundle bundle = new Bundle();
-                bundle.putStringArrayList("additionalMoviePreferences", new ArrayList<>(List.of(additionalMoviePreference.split(","))));
-                bundle.putStringArrayList("additionalMusicPreferences", new ArrayList<>(List.of(additionalMusicPreference.split(","))));
+                bundle.putStringArrayList("additionalMoviePreferences", new ArrayList<>(Arrays.asList(additionalMoviePreference.split(","))));
+                bundle.putStringArrayList("additionalMusicPreferences", new ArrayList<>(Arrays.asList(additionalMusicPreference.split(","))));
 
                 presenter.savePreferences(userId, selectedMoviePreferences, selectedMusicPreferences, bundle);
             }
         });
 
-        presenter.loadExistingPreferences(userId);
+        presenter.loadExistingPreferences();
     }
 
     private void setupRecyclerViews() {
