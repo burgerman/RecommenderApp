@@ -2,7 +2,7 @@
   "model": "music_trained.tflite",
   "inputs": [
     {"name": "musicFeature", "index": 2, "inputLength": 10},
-    {"name": "genreFeature", "index": 0, "inputLength": 8},
+    {"name": "genreFeature", "index": 0, "inputLength": 10},
     {"name": "ratingFeature", "index": 1, "inputLength": 10}
   ],
   "movieList": "sorted_music_vocab.json",

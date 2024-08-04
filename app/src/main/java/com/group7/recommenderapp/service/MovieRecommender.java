@@ -204,13 +204,15 @@ public class MovieRecommender implements RecommenderService<MovieItem> {
 
     @Override
     public List<MovieItem> recommendByGenre(List<String> genres) {
-        // Fake implementation: return a random subset of movies
-        if (genres == null) {
-            genres = new ArrayList<>();
+        if (genres == null || genres.isEmpty()) {
+            Log.w(TAG, "No genres provided for recommendation");
+            return new ArrayList<>();
         }
-        List<MovieItem> allMovies = new ArrayList<>(candidates.values());
-        Collections.shuffle(allMovies);
-        return allMovies.subList(0, Math.min(allMovies.size(), config.topK));
+        return candidates.values().stream()
+                .filter(p -> p.getGenres() != null && !Collections.disjoint(p.getGenres(), genres))
+                .sorted(Comparator.comparing(MovieItem::getScore).reversed())
+                .limit(config.topK)
+                .collect(Collectors.toList());
     }
 
     @Override

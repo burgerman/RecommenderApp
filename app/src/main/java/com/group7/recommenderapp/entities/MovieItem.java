@@ -5,7 +5,7 @@ import java.util.List;
 public class MovieItem extends ContentItem {
     private String director;
 
-    public MovieItem(int id, String title, List<String> genres, int score, String director) {
+    public MovieItem(int id, String title, List<String> genres, float score, String director) {
         super();  // Call the default constructor of ContentItem
         setId(id);
         setTitle(title);

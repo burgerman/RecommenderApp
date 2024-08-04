@@ -5,7 +5,7 @@ import java.util.List;
 public class MusicItem extends ContentItem {
     private String artist;
 
-    public MusicItem(int id, String title, List<String> genres, int score, String artist) {
+    public MusicItem(int id, String title, List<String> genres, float score, String artist) {
         super(id, title, genres, score);
         this.artist = artist;
     }

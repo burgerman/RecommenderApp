@@ -26,8 +26,8 @@ public class ContentItem {
      * Content item score, which will be viewed as public consensus of the heat of content
      * when it is deserialized from file, some transition in property name(count=>score) will occur
      */
-    @SerializedName(value = "count")
-    private int score;
+    @SerializedName(value = "avg_rating")
+    private float score;
 
     /**
      * denote if content item is selected by user
@@ -40,14 +40,13 @@ public class ContentItem {
     private float confidence;
 
     public static final String JOINER = " | ";
-    public static final String DELIMITER = "[|]";
 
     // Default constructor
     public ContentItem() {
     }
 
     // Parameterized constructor
-    public ContentItem(int id, String title, List<String> genres, int score) {
+    public ContentItem(int id, String title, List<String> genres, float score) {
         this.id = id;
         this.title = title;
         this.genres = genres;
@@ -78,11 +77,11 @@ public class ContentItem {
         this.genres = genres;
     }
 
-    public int getScore() {
+    public float getScore() {
         return score;
     }
 
-    public void setScore(int score) {
+    public void setScore(float score) {
         this.score = score;
     }
 
@@ -105,7 +104,7 @@ public class ContentItem {
     @Override
     public String toString() {
         return String.format(Locale.CANADA,
-                "Id: %d, title: %s, genres: %s, score: %d, selected: %s, confidence: %.2f",
+                "Id: %d, title: %s, genres: %s, score: %.2f, selected: %s, confidence: %.2f",
                 id, title, TextUtils.join(JOINER, genres), score, isSelected, confidence);
     }
 }
