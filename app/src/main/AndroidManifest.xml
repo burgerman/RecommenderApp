@@ -39,6 +39,7 @@
 
         <activity
             android:name=".ui.profile.UserProfileActivity"
+            android:label="@string/user_profile"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
 
         <activity
