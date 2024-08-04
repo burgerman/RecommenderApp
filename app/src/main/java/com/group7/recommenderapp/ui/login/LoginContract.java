@@ -2,7 +2,7 @@ package com.group7.recommenderapp.ui.login;
 
 public interface LoginContract {
     interface View {
-        void showLoginSuccess();
+        void showLoginSuccess(boolean newUser);
         void showLoginError(String message);
     }
 

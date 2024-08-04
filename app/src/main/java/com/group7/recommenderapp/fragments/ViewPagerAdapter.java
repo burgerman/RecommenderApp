@@ -39,7 +39,10 @@ public class ViewPagerAdapter extends RecyclerView.Adapter<ViewPagerAdapter.View
 
     @Override
     public int getItemCount() {
-        return contentItems.size();
+        if(contentItems!=null) {
+            return contentItems.size();
+        }
+        return 0;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

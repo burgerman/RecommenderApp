@@ -25,13 +25,15 @@ public class LoginPresenter implements LoginContract.Presenter {
             view.showLoginError("Please fill in all fields");
             return;
         }
-        int res = UserService.getUserServiceInstance(context).authenUser(usernameOrEmail, password);
-
+        UserService us =  UserService.getUserServiceInstance(context);
+        int res = us.authenUser(usernameOrEmail, password);
         if (res == 200) {
-            UserService.getUserServiceInstance(context).setCurrentUser(usernameOrEmail);
+            us.setCurrentUser(usernameOrEmail);
+            boolean newUser;
+            newUser = us.selectUserProfile(usernameOrEmail) == null;
             // Call to download content files before calling recommendation services
             downloadContentFile();
-            view.showLoginSuccess();
+            view.showLoginSuccess(newUser);
         } else if (res == 300) {
             view.showLoginError("Wrong password");
         } else {

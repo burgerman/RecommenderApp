@@ -43,10 +43,10 @@ public class PreferenceSelectionPresenter implements PreferenceSelectionContract
     }
 
     @Override
-    public void savePreferences(String userId, List<String> moviePreferences, List<String> musicPreferences, Bundle additionalPreferences) {
+    public void savePreferences(String userId, List<String> moviePreferences, List<String> musicPreferences, List<String> addiMoviePref, List<String> addMusicPref) {
         view.showLoading();
 
-        UserService userService =  UserService.getUserServiceInstance(getApplicationContext());
+        UserService userService =  UserService.getUserServiceInstance(context);
         Map<String, Object> userInfo = new HashMap<>();
         userInfo.put("username", userService.getCurrentUser());
         userInfo.put("class1", "Movie");
@@ -57,8 +57,8 @@ public class PreferenceSelectionPresenter implements PreferenceSelectionContract
         Map<String, Object> preferences = new HashMap<>();
         preferences.put("categoriesClass1", moviePreferences);
         preferences.put("categoriesClass2", musicPreferences);
-        preferences.put("additionalMoviePreferences", additionalPreferences.get("additionalMoviePreferences"));
-        preferences.put("additionalMusicPreferences", additionalPreferences.get("additionalMusicPreferences"));
+        preferences.put("additionalMoviePreferences", addiMoviePref);
+        preferences.put("additionalMusicPreferences", addMusicPref);
         preferences.put("LikedMovieList", null);
         preferences.put("LikedMusicList", null);
         userInfo.put("preferences", preferences);

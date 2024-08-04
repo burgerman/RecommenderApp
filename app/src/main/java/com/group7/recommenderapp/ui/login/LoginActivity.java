@@ -10,6 +10,7 @@ import com.group7.recommenderapp.R;
 import com.group7.recommenderapp.dao.UserDao;
 import com.group7.recommenderapp.service.UserService;
 import com.group7.recommenderapp.ui.home.HomeActivity;
+import com.group7.recommenderapp.ui.preference.PreferenceSelectionActivity;
 import com.group7.recommenderapp.ui.signup.SignUpActivity;
 import com.group7.recommenderapp.util.DatabaseManager;
 
@@ -40,9 +41,15 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
     }
 
     @Override
-    public void showLoginSuccess() {
-        Intent intent = new Intent(this, HomeActivity.class);
-        startActivity(intent);
+    public void showLoginSuccess(boolean newUser) {
+        Intent intent;
+        if(newUser) {
+            intent = new Intent(this, PreferenceSelectionActivity.class);
+            startActivity(intent);
+        } else {
+            intent = new Intent(this, HomeActivity.class);
+            startActivity(intent);
+        }
     }
 
     @Override

@@ -31,7 +31,10 @@ public class LikedItemsAdapter extends RecyclerView.Adapter<LikedItemsAdapter.Vi
 
     @Override
     public int getItemCount() {
-        return items.size();
+        if(items!=null) {
+            return items.size();
+        }
+        return 0;
     }
 
     public void setItems(List<String> items) {
