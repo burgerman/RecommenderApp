@@ -12,8 +12,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.group7.recommenderapp.R;
+import com.group7.recommenderapp.service.MovieRecommender;
+import com.group7.recommenderapp.service.MusicRecommender;
 import com.group7.recommenderapp.ui.home.HomeActivity;
-import com.group7.recommenderapp.util.UserUtils;
+import com.group7.recommenderapp.util.DatabaseManager;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +23,8 @@ public class PreferenceSelectionActivity extends AppCompatActivity implements Pr
 
     private RecyclerView movieRecyclerView;
     private RecyclerView musicRecyclerView;
-    private EditText additionalPreferenceInput;
+    private EditText movieGenreInput;
+    private EditText musicGenreInput;
     private Button savePreferencesButton;
     private ProgressBar progressBar;
     private PreferenceSelectionContract.Presenter presenter;
@@ -29,13 +32,15 @@ public class PreferenceSelectionActivity extends AppCompatActivity implements Pr
     private MoviePreferenceAdapter movieAdapter;
     private MusicPreferenceAdapter musicAdapter;
     private String userId;
+    private MovieRecommender movieRecommender;
+    private MusicRecommender musicRecommender;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_preference_selection);
 
-        userId = getIntent().getStringExtra("USER_ID");
+        userId = DatabaseManager.getSharedInstance(this).getCurrentUserDocId();
         if (userId == null) {
             Toast.makeText(this, "Error: User ID not found", Toast.LENGTH_LONG).show();
             finish();
@@ -44,7 +49,8 @@ public class PreferenceSelectionActivity extends AppCompatActivity implements Pr
 
         movieRecyclerView = findViewById(R.id.movieRecyclerView);
         musicRecyclerView = findViewById(R.id.musicRecyclerView);
-        additionalPreferenceInput = findViewById(R.id.additionalPreferenceInput);
+        movieGenreInput = findViewById(R.id.movieGenreInput);
+        musicGenreInput = findViewById(R.id.musicGenreInput);
         savePreferencesButton = findViewById(R.id.savePreferencesButton);
         progressBar = findViewById(R.id.progressBar);
 
@@ -57,8 +63,14 @@ public class PreferenceSelectionActivity extends AppCompatActivity implements Pr
             public void onClick(View v) {
                 List<String> selectedMoviePreferences = movieAdapter.getSelectedPreferences();
                 List<String> selectedMusicPreferences = musicAdapter.getSelectedPreferences();
-                String additionalPreference = additionalPreferenceInput.getText().toString();
-                presenter.savePreferences(userId, selectedMoviePreferences, selectedMusicPreferences, additionalPreference);
+                String additionalMoviePreference = movieGenreInput.getText().toString();
+                String additionalMusicPreference = musicGenreInput.getText().toString();
+
+                Bundle bundle = new Bundle();
+                bundle.putStringArrayList("additionalMoviePreferences", new ArrayList<>(List.of(additionalMoviePreference.split(","))));
+                bundle.putStringArrayList("additionalMusicPreferences", new ArrayList<>(List.of(additionalMusicPreference.split(","))));
+
+                presenter.savePreferences(userId, selectedMoviePreferences, selectedMusicPreferences, bundle);
             }
         });
 
@@ -81,14 +93,8 @@ public class PreferenceSelectionActivity extends AppCompatActivity implements Pr
 
     @Override
     public void showPreferencesSaved() {
-        try {
-            Toast.makeText(this, "Preferences saved successfully", Toast.LENGTH_SHORT).show();
-            UserUtils.saveUserMoviePreferences(this, movieAdapter.getSelectedPreferences());
-            navigateToHome();
-        } catch (Exception e) {
-            Log.e("PreferenceSelection", "Error saving preferences", e);
-            showError("An error occurred while saving preferences. Please try again.");
-        }
+        Toast.makeText(this, "Preferences saved successfully", Toast.LENGTH_SHORT).show();
+        navigateToHome();
     }
 
     @Override
@@ -99,7 +105,6 @@ public class PreferenceSelectionActivity extends AppCompatActivity implements Pr
     @Override
     public void navigateToHome() {
         Intent intent = new Intent(this, HomeActivity.class);
-        intent.putExtra("USER_ID", userId);
         startActivity(intent);
         finish();
     }
@@ -115,15 +120,18 @@ public class PreferenceSelectionActivity extends AppCompatActivity implements Pr
     }
 
     @Override
-    public void displayExistingPreferences(List<String> moviePreferences, List<String> musicPreferences, String additionalPreference) {
+    public void displayExistingPreferences(List<String> moviePreferences, List<String> musicPreferences, String additionalMoviePreference, String additionalMusicPreference) {
         if (moviePreferences != null) {
             movieAdapter.setSelectedPreferences(moviePreferences);
         }
         if (musicPreferences != null) {
             musicAdapter.setSelectedPreferences(musicPreferences);
         }
-        if (additionalPreference != null) {
-            additionalPreferenceInput.setText(additionalPreference);
+        if (additionalMoviePreference != null) {
+            movieGenreInput.setText(additionalMoviePreference);
+        }
+        if (additionalMusicPreference != null) {
+            musicGenreInput.setText(additionalMusicPreference);
         }
     }
 }

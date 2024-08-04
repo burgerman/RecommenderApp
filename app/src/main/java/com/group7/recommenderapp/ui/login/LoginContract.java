@@ -2,13 +2,11 @@ package com.group7.recommenderapp.ui.login;
 
 public interface LoginContract {
     interface View {
-        void showError(String message);
-        void navigateToUserProfile();
-        void navigateToPreferenceSelection();
+        void showLoginSuccess();
+        void showLoginError(String message);
     }
 
     interface Presenter {
-        void handleLogin(String username, String password);
-        void handleSignUp(String username, String password);
+        void login(String usernameOrEmail, String password);
     }
 }

@@ -1,29 +1,45 @@
 package com.group7.recommenderapp.ui.login;
 
-import com.couchbase.lite.Collection;
+import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
+
 import com.group7.recommenderapp.dao.UserDao;
 import com.group7.recommenderapp.entities.User;
-import android.util.Log;
+import com.group7.recommenderapp.service.UserService;
+import com.group7.recommenderapp.util.FileUtil;
+import com.group7.recommenderapp.util.UserUtils;
 
-public class LoginPresenter {
-    private static final String TAG = "LoginPresenter";
-    private LoginActivity loginActivity;
-    private UserDao userDao;
+public class LoginPresenter implements LoginContract.Presenter {
+    private LoginContract.View view;
 
-    public LoginPresenter(LoginActivity loginActivity, Collection userCollection) {
-        this.loginActivity = loginActivity;
-        this.userDao = new UserDao(userCollection);
+    public LoginPresenter(LoginContract.View view) {
+        this.view = view;
     }
 
-    public void handleLogin(String usernameOrEmail, String password) {
-        Log.d(TAG, "Attempting login for: " + usernameOrEmail);
-        User user = userDao.getUserByUsername(usernameOrEmail);
-        if (user != null && user.getPassword().equals(password)) {
-            Log.d(TAG, "Login successful for user: " + usernameOrEmail);
-            loginActivity.onLoginSuccess(user);
-        } else {
-            Log.d(TAG, "Login failed for user: " + usernameOrEmail);
-            loginActivity.onLoginFailure();
+    @Override
+    public void login(String usernameOrEmail, String password) {
+        if (usernameOrEmail.isEmpty() || password.isEmpty()) {
+            view.showLoginError("Please fill in all fields");
+            return;
         }
+        int res = UserService.getUserServiceInstance(getApplicationContext()).authenUser(usernameOrEmail, password);
+        String userDocId = UserUtils.generateUserDocId(usernameOrEmail);
+
+        if (res == 200) {
+            UserService.getUserServiceInstance(getApplicationContext()).setCurrentUser(usernameOrEmail);
+            // Call to download content files before calling recommendation services
+            downloadContentFile();
+            view.showLoginSuccess();
+        } else if (res == 300) {
+            view.showLoginError("Wrong password");
+        } else {
+            view.showLoginError("User not found");
+        }
+    }
+
+    private void downloadContentFile() {
+        String movieContentFile = getApplicationContext().getExternalFilesDir(null).toString() + "/" + FileUtil.LOCAL_MOVIE_CONTENT_FILE_NAME;
+        String musicContentFile = getApplicationContext().getExternalFilesDir(null).toString() + "/" + FileUtil.LOCAL_MUSIC_CONTENT_FILE_NAME;
+        new FileUtil.DownloadFileTask().execute(FileUtil.MUSIC_CONTENT_FILE_URL, musicContentFile);
+        new FileUtil.DownloadFileTask().execute(FileUtil.MOVIE_CONTENT_FILE_URL, movieContentFile);
     }
 }

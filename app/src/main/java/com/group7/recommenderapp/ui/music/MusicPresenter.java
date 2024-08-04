@@ -41,12 +41,13 @@ public class MusicPresenter implements MusicContract.Presenter {
     }
 
     @Override
-    public void addToFavorites(MusicItem music) {
-        // Add music to favorites
+    public void onHeartButtonClicked() {
+
     }
 
     @Override
-    public void removeFromFavorites(MusicItem music) {
-        // Remove music from favorites
+    public void onFeedbackSubmitted(String feedback) {
+
     }
+
 }

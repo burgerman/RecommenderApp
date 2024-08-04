@@ -7,64 +7,67 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.group7.recommenderapp.R;
+
 import java.util.List;
 
-public class MusicPreferenceAdapter extends RecyclerView.Adapter<MusicPreferenceAdapter.ViewHolder> {
+public class MusicPreferenceAdapter extends RecyclerView.Adapter<MusicPreferenceAdapter.MusicViewHolder> {
 
-    private final List<String> musicPreferences;
+    private final List<String> allPreferences;
     private final List<String> selectedPreferences;
 
-    public MusicPreferenceAdapter(List<String> musicPreferences, List<String> selectedPreferences) {
-        this.musicPreferences = musicPreferences;
+    public MusicPreferenceAdapter(List<String> allPreferences, List<String> selectedPreferences) {
+        this.allPreferences = allPreferences;
         this.selectedPreferences = selectedPreferences;
     }
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_preference, parent, false);
-        return new ViewHolder(view);
-    }
-
-    public void setSelectedPreferences(List<String> selectedPreferences) {
-        this.selectedPreferences.clear();
-        this.selectedPreferences.addAll(selectedPreferences);
-        notifyDataSetChanged();
+    public MusicViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_preference, parent, false);
+        return new MusicViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        String preference = musicPreferences.get(position);
-        holder.preferenceText.setText(preference);
-        holder.preferenceCheckBox.setChecked(selectedPreferences.contains(preference));
-        holder.preferenceCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+    public void onBindViewHolder(@NonNull MusicViewHolder holder, int position) {
+        String preference = allPreferences.get(position);
+        holder.preferenceTextView.setText(preference);
+        holder.checkBox.setChecked(selectedPreferences.contains(preference));
+
+        holder.checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
-                selectedPreferences.add(preference);
+                if (!selectedPreferences.contains(preference)) {
+                    selectedPreferences.add(preference);
+                }
             } else {
                 selectedPreferences.remove(preference);
             }
         });
     }
+    public void setSelectedPreferences(List<String> preferences) {
+        selectedPreferences.clear();
+        selectedPreferences.addAll(preferences);
+        notifyDataSetChanged();
+    }
 
     @Override
     public int getItemCount() {
-        return musicPreferences.size();
+        return allPreferences.size();
     }
 
     public List<String> getSelectedPreferences() {
         return selectedPreferences;
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView preferenceText;
-        CheckBox preferenceCheckBox;
+    static class MusicViewHolder extends RecyclerView.ViewHolder {
+        TextView preferenceTextView;
+        CheckBox checkBox;
 
-        ViewHolder(View itemView) {
+        MusicViewHolder(View itemView) {
             super(itemView);
-            preferenceText = itemView.findViewById(R.id.preferenceText);
-            preferenceCheckBox = itemView.findViewById(R.id.preferenceCheckBox);
+            preferenceTextView = itemView.findViewById(R.id.preferenceTextView);
+            checkBox = itemView.findViewById(R.id.checkBox);
         }
     }
 }

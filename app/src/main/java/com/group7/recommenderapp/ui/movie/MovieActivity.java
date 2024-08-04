@@ -1,76 +1,125 @@
 package com.group7.recommenderapp.ui.movie;
 
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.Toast;
-import androidx.appcompat.widget.SearchView;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.group7.recommenderapp.R;
-import com.group7.recommenderapp.fragments.MovieFragment;
-import com.group7.recommenderapp.ui.base.BaseActivity;
+import com.group7.recommenderapp.entities.MovieItem;
+import java.util.ArrayList;
+import java.util.List;
 
-public class MovieActivity extends BaseActivity {
+public class MovieActivity extends AppCompatActivity implements MovieContract.View {
+
+    private RecyclerView movieRecyclerView;
+    private ProgressBar progressBar;
+    private MovieAdapter movieAdapter;
+    private MovieContract.Presenter presenter;
+    private ImageButton heartButton;
+    private FloatingActionButton feedbackButton;
+    private LinearLayout feedbackContainer;
+    private EditText feedbackEditText;
+    private TextView movieDetailsTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie);
 
-        if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.movieContainer, new MovieFragment())
-                    .commit();
-        }
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
-        FloatingActionButton addMovieButton = findViewById(R.id.addMovieButton);
-        addMovieButton.setOnClickListener(v -> {
-            // Handle add movie action
-            Toast.makeText(this, "Add movie clicked", Toast.LENGTH_SHORT).show();
+        movieRecyclerView = findViewById(R.id.movieRecyclerView);
+        progressBar = findViewById(R.id.progressBar);
+        heartButton = findViewById(R.id.heartButton);
+        feedbackButton = findViewById(R.id.feedbackButton);
+        feedbackContainer = findViewById(R.id.feedbackContainer);
+        feedbackEditText = findViewById(R.id.feedbackEditText);
+        movieDetailsTextView = findViewById(R.id.movieDetailsTextView);
+
+        presenter = new MoviePresenter(this, this);
+
+        setupRecyclerView();
+        setupHeartButton();
+        setupFeedbackButton();
+
+        presenter.loadMovies();
+    }
+
+    private void setupRecyclerView() {
+        movieAdapter = new MovieAdapter(new ArrayList<>(), movie -> presenter.onMovieItemClicked(movie));
+        movieRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        movieRecyclerView.setAdapter(movieAdapter);
+    }
+
+    private void setupHeartButton() {
+        heartButton.setOnClickListener(v -> presenter.onHeartButtonClicked());
+    }
+
+    private void setupFeedbackButton() {
+        feedbackButton.setOnClickListener(v -> {
+            feedbackContainer.setVisibility(View.VISIBLE);
+            feedbackButton.setVisibility(View.GONE);
+        });
+
+        findViewById(R.id.submitFeedbackButton).setOnClickListener(v -> {
+            String feedback = feedbackEditText.getText().toString();
+            presenter.onFeedbackSubmitted(feedback);
+            feedbackEditText.setText("");
+            feedbackContainer.setVisibility(View.GONE);
+            feedbackButton.setVisibility(View.VISIBLE);
         });
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.movie_menu, menu);
-
-        MenuItem searchItem = menu.findItem(R.id.action_search);
-        if (searchItem != null) {
-            SearchView searchView = (SearchView) searchItem.getActionView();
-            if (searchView != null) {
-                searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                    @Override
-                    public boolean onQueryTextSubmit(String query) {
-                        // Handle search query submit
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onQueryTextChange(String newText) {
-                        // Handle search query change
-                        return false;
-                    }
-                });
-            }
-        }
-
-        return true;
+    public void showMovies(List<MovieItem> movies) {
+        movieAdapter.setMovies(movies);
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int itemId = item.getItemId();
-        if (itemId == R.id.action_details) {
-            // Handle details action
-            return true;
-        } else if (itemId == R.id.action_delete) {
-            // Handle delete action
-            return true;
-        } else if (itemId == R.id.action_favorites) {
-            // Handle view favorites action
-            return true;
-        } else {
-            return super.onOptionsItemSelected(item);
-        }
+    public void showError(String message) {
+        Snackbar.make(findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void showMessage(String message) {
+
+    }
+
+    @Override
+    public void showLoading() {
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideLoading() {
+        progressBar.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void updateHeartButton(boolean isFilled) {
+        heartButton.setImageResource(isFilled ? R.drawable.ic_heart_filled : R.drawable.ic_heart_outline);
+    }
+
+    @Override
+    public void showFeedbackSubmitted() {
+        Snackbar.make(findViewById(android.R.id.content), "Feedback submitted", Snackbar.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showMovieDetails(MovieItem movie) {
+        String details = String.format("Title: %s\nGenres: %s\nAverage_rating: %f",
+                movie.getTitle(), movie.getId(), String.join(", ", movie.getGenres()), movie.getScore());
+        movieDetailsTextView.setText(details);
+        movieDetailsTextView.setVisibility(View.VISIBLE);
     }
 }

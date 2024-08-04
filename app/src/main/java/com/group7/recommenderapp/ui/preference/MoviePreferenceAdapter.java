@@ -7,64 +7,67 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.group7.recommenderapp.R;
+
 import java.util.List;
 
-public class MoviePreferenceAdapter extends RecyclerView.Adapter<MoviePreferenceAdapter.ViewHolder> {
+public class MoviePreferenceAdapter extends RecyclerView.Adapter<MoviePreferenceAdapter.MovieViewHolder> {
 
-    private final List<String> moviePreferences;
+    private final List<String> allPreferences;
     private final List<String> selectedPreferences;
 
-    public MoviePreferenceAdapter(List<String> moviePreferences, List<String> selectedPreferences) {
-        this.moviePreferences = moviePreferences;
+    public MoviePreferenceAdapter(List<String> allPreferences, List<String> selectedPreferences) {
+        this.allPreferences = allPreferences;
         this.selectedPreferences = selectedPreferences;
     }
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_preference, parent, false);
-        return new ViewHolder(view);
+    public MovieViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_preference, parent, false);
+        return new MovieViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        String preference = moviePreferences.get(position);
-        holder.preferenceText.setText(preference);
-        holder.preferenceCheckBox.setChecked(selectedPreferences.contains(preference));
-        holder.preferenceCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+    public void onBindViewHolder(@NonNull MovieViewHolder holder, int position) {
+        String preference = allPreferences.get(position);
+        holder.preferenceTextView.setText(preference);
+        holder.checkBox.setChecked(selectedPreferences.contains(preference));
+
+        holder.checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
-                selectedPreferences.add(preference);
+                if (!selectedPreferences.contains(preference)) {
+                    selectedPreferences.add(preference);
+                }
             } else {
                 selectedPreferences.remove(preference);
             }
         });
     }
-
-    public void setSelectedPreferences(List<String> selectedPreferences) {
-        this.selectedPreferences.clear();
-        this.selectedPreferences.addAll(selectedPreferences);
+    public void setSelectedPreferences(List<String> preferences) {
+        selectedPreferences.clear();
+        selectedPreferences.addAll(preferences);
         notifyDataSetChanged();
     }
 
     @Override
     public int getItemCount() {
-        return moviePreferences.size();
+        return allPreferences.size();
     }
 
     public List<String> getSelectedPreferences() {
         return selectedPreferences;
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView preferenceText;
-        CheckBox preferenceCheckBox;
+    static class MovieViewHolder extends RecyclerView.ViewHolder {
+        TextView preferenceTextView;
+        CheckBox checkBox;
 
-        ViewHolder(View itemView) {
+        MovieViewHolder(View itemView) {
             super(itemView);
-            preferenceText = itemView.findViewById(R.id.preferenceText);
-            preferenceCheckBox = itemView.findViewById(R.id.preferenceCheckBox);
+            preferenceTextView = itemView.findViewById(R.id.preferenceTextView);
+            checkBox = itemView.findViewById(R.id.checkBox);
         }
     }
 }

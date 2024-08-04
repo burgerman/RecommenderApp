@@ -1,4 +1,4 @@
-package com.group7.recommenderapp.profile;
+package com.group7.recommenderapp.ui.profile;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,11 +7,15 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.group7.recommenderapp.R;
-import java.util.ArrayList;
 import java.util.List;
 
 public class LikedItemsAdapter extends RecyclerView.Adapter<LikedItemsAdapter.ViewHolder> {
-    private List<String> likedItems = new ArrayList<>();
+
+    private List<String> items;
+
+    public LikedItemsAdapter(List<String> items) {
+        this.items = items;
+    }
 
     @NonNull
     @Override
@@ -22,25 +26,25 @@ public class LikedItemsAdapter extends RecyclerView.Adapter<LikedItemsAdapter.Vi
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.likedItemText.setText(likedItems.get(position));
+        holder.itemTextView.setText(items.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return likedItems.size();
+        return items.size();
     }
 
-    public void setLikedItems(List<String> likedItems) {
-        this.likedItems = likedItems;
+    public void setItems(List<String> items) {
+        this.items = items;
         notifyDataSetChanged();
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView likedItemText;
+        TextView itemTextView;
 
         ViewHolder(View itemView) {
             super(itemView);
-            likedItemText = itemView.findViewById(R.id.likedItemText);
+            itemTextView = itemView.findViewById(R.id.itemTextView);
         }
     }
 }

@@ -2,6 +2,8 @@ package com.group7.recommenderapp.ui.home;
 
 import android.content.Context;
 import com.group7.recommenderapp.entities.ContentItem;
+import com.group7.recommenderapp.entities.GenreEntity;
+import com.group7.recommenderapp.entities.ResultSet;
 import com.group7.recommenderapp.service.MovieConfig;
 import com.group7.recommenderapp.service.MovieRecommender;
 import com.group7.recommenderapp.service.MusicConfig;
@@ -34,17 +36,16 @@ public class HomePresenter implements HomeContract.Presenter {
 
         // Load movie recommendations
         List<ContentItem> recommendedMovies = movieRecommenderService.recommendByGenre(null); // Replace null with actual genres
-        view.showRecommendedContent(recommendedMovies);
+        ResultSet movieResultSet = new ResultSet();
+        movieResultSet.setItemset(recommendedMovies);
+        view.showRecommendedContent(movieResultSet.getTopK(10));
 
         // Load music recommendations
         List<ContentItem> recommendedMusic = musicRecommenderService.recommendByGenre(null); // Replace null with actual genres
-        view.showRecommendedContent(recommendedMusic);
+        ResultSet musicResultSet = new ResultSet();
+        musicResultSet.setItemset(recommendedMusic);
+        view.showRecommendedContent(musicResultSet.getTopK(10));
 
         view.hideLoading();
-    }
-
-    @Override
-    public void onContentItemClicked(ContentItem item) {
-        // Handle content item click, e.g., open content details
     }
 }

@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -16,6 +15,7 @@ import com.group7.recommenderapp.entities.MovieItem;
 import com.group7.recommenderapp.ui.movie.MovieAdapter;
 import com.group7.recommenderapp.ui.movie.MovieContract;
 import com.group7.recommenderapp.ui.movie.MoviePresenter;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,22 +49,39 @@ public class MovieFragment extends Fragment implements MovieContract.View {
         recyclerView.setAdapter(movieAdapter);
     }
 
-    @Override
     public void showMovies(List<MovieItem> movies) {
         movieAdapter.setMovies(movies);
     }
 
     @Override
     public void showError(String message) {
-        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
+
     }
 
     @Override
+    public void updateHeartButton(boolean isFilled) {
+        // This method is handled in MovieActivity
+    }
+
+    @Override
+    public void showFeedbackSubmitted() {
+
+    }
+
+    @Override
+    public void showMovieDetails(MovieItem movie) {
+
+    }
+
+    @Override
+    public void showMessage(String message) {
+        // This method is handled in MovieActivity
+    }
+
     public void showLoading() {
         progressBar.setVisibility(View.VISIBLE);
     }
 
-    @Override
     public void hideLoading() {
         progressBar.setVisibility(View.GONE);
     }

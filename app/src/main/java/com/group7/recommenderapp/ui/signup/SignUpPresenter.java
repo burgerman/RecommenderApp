@@ -1,48 +1,47 @@
 package com.group7.recommenderapp.ui.signup;
 
+import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
+
+import com.group7.recommenderapp.dao.UserDao;
 import com.group7.recommenderapp.entities.User;
 import com.group7.recommenderapp.service.UserService;
+import com.group7.recommenderapp.util.UserUtils;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 public class SignUpPresenter implements SignUpContract.Presenter {
     private SignUpContract.View view;
-    private UserService userService;
+    private UserDao userDao;
 
-    public SignUpPresenter(SignUpContract.View view, UserService userService) {
+    public SignUpPresenter(SignUpContract.View view, UserDao userDao) {
         this.view = view;
-        this.userService = userService;
+        this.userDao = userDao;
     }
 
     @Override
-    public void attemptSignUp(String username, String email, String password, String confirmPassword) {
-        if (!validateInput(username, email, password, confirmPassword)) {
+    public void signUp(String usernameOrEmail, String password, String confirmPassword) {
+        if (usernameOrEmail.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
+            view.showSignUpError("Please fill in all fields");
             return;
         }
 
-        User newUser = userService.createNewUser(username, email, password);
-        if (newUser != null) {
-            view.showSignUpSuccess(newUser);
-        } else {
-            view.showSignUpFailure("Unable to create user");
+        if (!UserUtils.isValidEmail(usernameOrEmail)) {
+            view.showSignUpError("Invalid username or email");
+            return;
         }
-    }
 
-    private boolean validateInput(String username, String email, String password, String confirmPassword) {
-        if (username.isEmpty() || email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
-            view.showValidationError("All fields are required");
-            return false;
-        }
-        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            view.showValidationError("Invalid email format");
-            return false;
-        }
         if (!password.equals(confirmPassword)) {
-            view.showValidationError("Passwords do not match");
-            return false;
+            view.showSignUpError("Passwords do not match");
+            return;
         }
-        if (password.length() < 6) {
-            view.showValidationError("Password must be at least 6 characters long");
-            return false;
+
+        int res = UserService.getUserServiceInstance(getApplicationContext()).createNewUser(usernameOrEmail, password);
+
+        if (res == 200) {
+            view.showSignUpSuccess();
+        } else {
+            view.showSignUpError("Sign up failed");
         }
-        return true;
     }
 }

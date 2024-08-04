@@ -1,15 +1,12 @@
 package com.group7.recommenderapp.ui.signup;
 
-import com.group7.recommenderapp.entities.User;
-
 public interface SignUpContract {
     interface View {
-        void showSignUpSuccess(User newUser);
-        void showSignUpFailure(String message);
-        void showValidationError(String message);
+        void showSignUpSuccess();
+        void showSignUpError(String message);
     }
 
     interface Presenter {
-        void attemptSignUp(String username, String email, String password, String confirmPassword);
+        void signUp(String usernameOrEmail, String password, String confirmPassword);
     }
 }

@@ -19,6 +19,7 @@ public class DocIDsUnitTest {
         profileDocID = UserUtils.generateUserProfileDocId(userName, userDocID);
         System.out.println("profile doc id: "+profileDocID);
         Assert.assertNotNull(profileDocID);
+        Assert.assertEquals(profileDocID, UserUtils.generateUserProfileDocId("menghao@mylaurier.ca", UserUtils.generateUserDocId("menghao@mylaurier.ca")));
     }
     @Test
     public void testUserDocIDGeneration() {
@@ -26,5 +27,6 @@ public class DocIDsUnitTest {
         userDocID = UserUtils.generateUserDocId(userName);
         System.out.println("user doc id: "+userDocID);
         Assert.assertNotNull(userDocID);
+        Assert.assertEquals(userDocID, UserUtils.generateUserDocId("menghao@mylaurier.ca"));
     }
 }

@@ -34,7 +34,7 @@
             android:layout_marginBottom="25dp">
 
             <EditText
-                android:id="@+id/usernameInput"
+                android:id="@+id/usernameOrEmailInput"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:backgroundTint="@color/colorPrimary"

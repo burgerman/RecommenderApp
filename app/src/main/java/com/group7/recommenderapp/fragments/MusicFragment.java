@@ -68,4 +68,19 @@ public class MusicFragment extends Fragment implements MusicContract.View {
     public void hideLoading() {
         progressBar.setVisibility(View.GONE);
     }
+
+    @Override
+    public void updateHeartButton(boolean isFilled) {
+
+    }
+
+    @Override
+    public void showFeedbackSubmitted() {
+
+    }
+
+    @Override
+    public void showMusicDetails(MusicItem music) {
+
+    }
 }

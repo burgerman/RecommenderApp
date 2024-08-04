@@ -13,6 +13,5 @@ public interface HomeContract {
 
     interface Presenter {
         void loadRecommendedContent();
-        void onContentItemClicked(ContentItem item);
     }
 }

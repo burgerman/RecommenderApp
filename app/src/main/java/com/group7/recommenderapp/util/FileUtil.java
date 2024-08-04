@@ -29,14 +29,13 @@ import java.util.Collection;
 import java.util.List;
 
 import com.group7.recommenderapp.entities.MovieItem;
-import com.group7.recommenderapp.entities.MusicItem;
 import com.group7.recommenderapp.service.MovieConfig;
-import com.group7.recommenderapp.service.MusicConfig;
 
 public class FileUtil {
-    public static final String DOWNLOAD_FILE_URL = "http://10.0.2.2:8000/test.txt";
-    public static final String LOCAL_FILE_NAME = "local_file.txt";
-
+    public static final String MOVIE_CONTENT_FILE_URL = "http://10.0.2.2:8000/sorted_movie_vocab.json";
+    public static final String MUSIC_CONTENT_FILE_URL = "http://10.0.2.2:8000/sorted_music_vocab.json";
+    public static final String LOCAL_MOVIE_CONTENT_FILE_NAME = "sorted_movie_vocab.json";
+    public static final String LOCAL_MUSIC_CONTENT_FILE_NAME = "sorted_music_vocab.json";
     /** Load TF Lite model from asset file. */
     public static MappedByteBuffer loadModelFile(AssetManager assetManager, String modelPath)
             throws IOException {
@@ -58,15 +57,6 @@ public class FileUtil {
         return gson.fromJson(content, type);
     }
 
-    /** Load candidates from asset file. */
-    public static Collection<MusicItem> loadMusicList(
-            AssetManager assetManager, String candidateListPath) throws IOException {
-        String content = loadFileContent(assetManager, candidateListPath);
-        Gson gson = new Gson();
-        Type type = new TypeToken<Collection<MusicItem>>() {}.getType();
-        return gson.fromJson(content, type);
-    }
-
     public static List<String> loadGenreList(AssetManager assetManager, String genreListPath)
             throws IOException {
         String content = loadFileContent(assetManager, genreListPath);
@@ -79,14 +69,6 @@ public class FileUtil {
         String content = loadFileContent(assetManager, configPath);
         Gson gson = new Gson();
         Type type = new TypeToken<MovieConfig>() {}.getType();
-        return gson.fromJson(content, type);
-    }
-
-    /** Load config from asset file. */
-    public static MusicConfig loadMusicConfig(AssetManager assetManager, String configPath) throws IOException {
-        String content = loadFileContent(assetManager, configPath);
-        Gson gson = new Gson();
-        Type type = new TypeToken<MusicConfig>() {}.getType();
         return gson.fromJson(content, type);
     }
 

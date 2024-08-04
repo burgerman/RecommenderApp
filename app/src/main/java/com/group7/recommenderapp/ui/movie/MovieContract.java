@@ -7,14 +7,20 @@ public interface MovieContract {
     interface View {
         void showMovies(List<MovieItem> movies);
         void showError(String message);
+
+        void showMessage(String message);
+
         void showLoading();
         void hideLoading();
+        void updateHeartButton(boolean isFilled);
+        void showFeedbackSubmitted();
+        void showMovieDetails(MovieItem movie);
     }
 
     interface Presenter {
         void loadMovies();
         void onMovieItemClicked(MovieItem movie);
-        void addToFavorites(MovieItem movie);
-        void removeFromFavorites(MovieItem movie);
+        void onHeartButtonClicked();
+        void onFeedbackSubmitted(String feedback);
     }
 }

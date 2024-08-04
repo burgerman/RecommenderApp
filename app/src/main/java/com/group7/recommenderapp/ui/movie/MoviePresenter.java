@@ -40,12 +40,12 @@ public class MoviePresenter implements MovieContract.Presenter {
     }
 
     @Override
-    public void addToFavorites(MovieItem movie) {
-        // Add movie to favorites
+    public void onHeartButtonClicked() {
+
     }
 
     @Override
-    public void removeFromFavorites(MovieItem movie) {
-        // Remove movie from favorites
+    public void onFeedbackSubmitted(String feedback) {
+
     }
 }

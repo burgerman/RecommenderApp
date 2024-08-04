@@ -1,84 +1,112 @@
 package com.group7.recommenderapp.ui.preference;
 
+import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
+
 import android.content.Context;
-import android.util.Log;
-import com.group7.recommenderapp.util.DatabaseManager;
+import android.os.Bundle;
 import com.group7.recommenderapp.dao.UserProfileDao;
+import com.group7.recommenderapp.entities.GenreEntity;
 import com.group7.recommenderapp.entities.UserProfile;
 import com.group7.recommenderapp.entities.UserPreference;
+import com.group7.recommenderapp.service.MovieRecommender;
+import com.group7.recommenderapp.service.MusicRecommender;
+import com.group7.recommenderapp.service.RecommenderService;
+import com.group7.recommenderapp.service.UserService;
+import com.group7.recommenderapp.util.DatabaseManager;
+import com.group7.recommenderapp.util.FileUtil;
+
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class PreferenceSelectionPresenter implements PreferenceSelectionContract.Presenter {
-    private final PreferenceSelectionContract.View view;
-    private final Context context;
-    private final DatabaseManager dbManager;
-    private final UserProfileDao userProfileDao;
+
+    private PreferenceSelectionContract.View view;
+    private UserProfileDao userProfileDao;
+    private Context context;
+    private RecommenderService movieRecommender;
+    private RecommenderService musicRecommender;
 
     public PreferenceSelectionPresenter(PreferenceSelectionContract.View view, Context context) {
         this.view = view;
         this.context = context;
-        this.dbManager = DatabaseManager.getSharedInstance(context);
-        this.userProfileDao = new UserProfileDao(dbManager.getProfileCollection());
+        this.userProfileDao = new UserProfileDao(DatabaseManager.getSharedInstance(context).getProfileCollection());
+        try {
+            movieRecommender = MovieRecommender.getInstance(context);
+            musicRecommender = MusicRecommender.getInstance(context);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
-    public void savePreferences(String userId, List<String> moviePreferences, List<String> musicPreferences, String additionalPreference) {
-        if (moviePreferences.isEmpty() || musicPreferences.isEmpty()) {
-            view.showError("Please select at least one preference in each category");
-            return;
-        }
-
+    public void savePreferences(String userId, List<String> moviePreferences, List<String> musicPreferences, Bundle additionalPreferences) {
         view.showLoading();
 
-        try {
-            UserProfile userProfile = userProfileDao.getUserProfile(userId);
-            if (userProfile == null) {
-                userProfile = new UserProfile(userId);
-            }
+        UserService userService =  UserService.getUserServiceInstance(getApplicationContext());
+        Map<String, Object> userInfo = new HashMap<>();
+        userInfo.put("username", userService.getCurrentUser());
+        userInfo.put("class1", "Movie");
+        userInfo.put("class2", "Music");
+        userInfo.put("language", "English");
+        userInfo.put("age", 0);
+        userInfo.put("gender", "");
+        Map<String, Object> preferences = new HashMap<>();
+        preferences.put("categoriesClass1", moviePreferences);
+        preferences.put("categoriesClass2", musicPreferences);
+        userInfo.put("preferences", preferences);
+        UserService.getUserServiceInstance(getApplicationContext()).createOrUpdateUserProfile(userInfo);
 
-            UserPreference preferences = new UserPreference();
-            preferences.setCategoriesClass1(moviePreferences);
-            preferences.setCategoriesClass2(musicPreferences);
-            preferences.setAdditionalPreference(additionalPreference);
-
-            userProfile.setPreferences(preferences);
-            userProfileDao.createOrUpdateProfile(userProfile);
-
-            view.hideLoading();
-            view.showPreferencesSaved();
-        } catch (Exception e) {
-            Log.e("PreferencePresenter", "Error saving preferences", e);
-            view.hideLoading();
-            view.showError("An error occurred while saving preferences. Please try again.");
-        }
-    }
-
-    @Override
-    public List<String> getMovieGenres() {
-        return Arrays.asList("Action", "Comedy", "Drama", "Sci-Fi", "Horror", "Romance", "Thriller");
-    }
-
-    @Override
-    public List<String> getMusicGenres() {
-        return Arrays.asList("Rock", "Pop", "Hip-Hop", "Jazz", "Classical", "Electronic", "Country");
+        view.hideLoading();
+        view.showPreferencesSaved();
     }
 
     @Override
     public void loadExistingPreferences(String userId) {
+        view.showLoading();
+
+        UserProfile userProfile = userProfileDao.getUserProfile(userId);
+        if (userProfile != null && userProfile.getPreferences() != null) {
+            List<String> moviePreferences = (List<String>) userProfile.getPreferences().getPreferenceDict().get("categoriesClass2");
+            List<String> musicPreferences = (List<String>) userProfile.getPreferences().getPreferenceDict().get("categoriesClass1");
+
+            // New: Get additional preferences
+            List<String> additionalMoviePreferences = (List<String>) userProfile.getPreferences().getPreferenceDict().get("additionalMoviePreferences");
+            List<String> additionalMusicPreferences = (List<String>) userProfile.getPreferences().getPreferenceDict().get("additionalMusicPreferences");
+
+            String additionalMoviePreference = additionalMoviePreferences != null ? String.join(",", additionalMoviePreferences) : "";
+            String additionalMusicPreference = additionalMusicPreferences != null ? String.join(",", additionalMusicPreferences) : "";
+
+            view.displayExistingPreferences(moviePreferences, musicPreferences, additionalMoviePreference, additionalMusicPreference);
+        }
+
+        view.hideLoading();
+    }
+
+    @Override
+    public List<String> getMovieGenres() {
+        // Implement logic to get movie genres
+//        return Arrays.asList("Action", "Comedy", "Drama", "Sci-Fi", "Thriller", "Horror");
         try {
-            UserProfile userProfile = userProfileDao.getUserProfile(userId);
-            if (userProfile != null && userProfile.getPreferences() != null) {
-                UserPreference preferences = userProfile.getPreferences();
-                view.displayExistingPreferences(
-                        preferences.getCategoriesClass1(),
-                        preferences.getCategoriesClass2(),
-                        preferences.getAdditionalPreference()
-                );
-            }
-        } catch (Exception e) {
-            Log.e("PreferencePresenter", "Error loading existing preferences", e);
-            view.showError("Error loading existing preferences: " + e.getMessage());
+            GenreEntity movieGenres = new GenreEntity();
+            return movieGenres.getTopKGenres(10, movieRecommender.getGenresForRecommend());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public List<String> getMusicGenres() {
+        // Implement logic to get music genres
+//        return Arrays.asList("Pop", "Rock", "Jazz", "Classical", "Hip-Hop", "Electronic");
+        try {
+            GenreEntity musicGenres = new GenreEntity();
+            return musicGenres.getTopKGenres(10,  musicRecommender.getGenresForRecommend());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 }

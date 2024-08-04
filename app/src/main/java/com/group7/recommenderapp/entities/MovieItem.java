@@ -1,18 +1,7 @@
 package com.group7.recommenderapp.entities;
 
-import java.util.List;
-
-public class MovieItem extends ContentItem {
+public class MovieItem extends ContentItem{
     private String director;
-
-    public MovieItem(int id, String title, List<String> genres, float score, String director) {
-        super();  // Call the default constructor of ContentItem
-        setId(id);
-        setTitle(title);
-        setGenres(genres);
-        setScore(score);
-        this.director = director;
-    }
 
     public String getDirector() {
         return director;

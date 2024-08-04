@@ -9,12 +9,15 @@ public interface MusicContract {
         void showError(String message);
         void showLoading();
         void hideLoading();
+        void updateHeartButton(boolean isFilled);
+        void showFeedbackSubmitted();
+        void showMusicDetails(MusicItem music);
     }
 
     interface Presenter {
         void loadMusic();
         void onMusicItemClicked(MusicItem music);
-        void addToFavorites(MusicItem music);
-        void removeFromFavorites(MusicItem music);
+        void onHeartButtonClicked();
+        void onFeedbackSubmitted(String feedback);
     }
 }
