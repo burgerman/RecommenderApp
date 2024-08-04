@@ -17,6 +17,7 @@ public interface HomeContract {
         void navigateToMovieTap();
         void navigateToMusicTap();
         void navigateToProfile();
+        void navigateToHelp();
     }
 
     interface Presenter {
@@ -25,5 +26,6 @@ public interface HomeContract {
         void onMovieIconClicked();
         void onMusicIconClicked();
         void onProfileIconClicked();
+        void onHelpIconClicked();
     }
 }

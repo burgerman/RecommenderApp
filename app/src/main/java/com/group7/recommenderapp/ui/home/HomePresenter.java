@@ -68,4 +68,7 @@ public class HomePresenter implements HomeContract.Presenter {
     public void onProfileIconClicked() {
         view.navigateToProfile();
     }
+
+    @Override
+    public void onHelpIconClicked() { view.navigateToHelp();}
 }

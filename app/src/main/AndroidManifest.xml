@@ -63,5 +63,11 @@
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:exported="false" />
 
+        <activity android:name=".ui.help.HelpActivity"></activity>
+
+
+
     </application>
+
+
 </manifest>

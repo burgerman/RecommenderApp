@@ -10,6 +10,7 @@ import com.group7.recommenderapp.R;
 import com.group7.recommenderapp.entities.ContentItem;
 import com.group7.recommenderapp.fragments.MovieFragment;
 import com.group7.recommenderapp.fragments.MusicFragment;
+import com.group7.recommenderapp.ui.help.HelpActivity;
 import com.group7.recommenderapp.ui.login.LoginPresenter;
 import com.group7.recommenderapp.ui.movie.MovieActivity;
 import com.group7.recommenderapp.ui.music.MusicActivity;
@@ -28,6 +29,7 @@ public class HomeActivity extends AppCompatActivity implements HomeContract.View
         ImageView homeIcon = findViewById(R.id.homeIcon);
         ImageView movieIcon = findViewById(R.id.movieicon);
         ImageView musicIcon = findViewById(R.id.musicicon);
+        ImageView helpIcon = findViewById(R.id.helpicon);
         ImageView profileIcon = findViewById(R.id.profileicon);
         progressBar = findViewById(R.id.progressBar);
         presenter = new HomePresenter(this, this);
@@ -42,6 +44,8 @@ public class HomeActivity extends AppCompatActivity implements HomeContract.View
         movieIcon.setOnClickListener(v -> presenter.onMovieIconClicked());
         musicIcon.setOnClickListener(v -> presenter.onMusicIconClicked());
         profileIcon.setOnClickListener(v -> presenter.onProfileIconClicked());
+        helpIcon.setOnClickListener(v -> presenter.onHelpIconClicked());
+
     }
 
     @Override
@@ -98,6 +102,11 @@ public class HomeActivity extends AppCompatActivity implements HomeContract.View
     @Override
     public void navigateToProfile() {
         Intent intent = new Intent(this, UserProfileActivity.class);
+        startActivity(intent);
+    }
+    @Override
+    public void navigateToHelp() {
+        Intent intent = new Intent(this, HelpActivity.class);
         startActivity(intent);
     }
 }
