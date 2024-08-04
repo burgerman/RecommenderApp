@@ -29,7 +29,9 @@ import java.util.Collection;
 import java.util.List;
 
 import com.group7.recommenderapp.entities.MovieItem;
+import com.group7.recommenderapp.entities.MusicItem;
 import com.group7.recommenderapp.service.MovieConfig;
+import com.group7.recommenderapp.service.MusicConfig;
 
 public class FileUtil {
     public static final String MOVIE_CONTENT_FILE_URL = "http://10.0.2.2:8000/sorted_movie_vocab.json";
@@ -56,7 +58,14 @@ public class FileUtil {
         Type type = new TypeToken<Collection<MovieItem>>() {}.getType();
         return gson.fromJson(content, type);
     }
-
+    /** Load candidates from asset file. */
+    public static Collection<MusicItem> loadMusicList(
+            AssetManager assetManager, String candidateListPath) throws IOException {
+        String content = loadFileContent(assetManager, candidateListPath);
+        Gson gson = new Gson();
+        Type type = new TypeToken<Collection<MusicItem>>() {}.getType();
+        return gson.fromJson(content, type);
+    }
     public static List<String> loadGenreList(AssetManager assetManager, String genreListPath)
             throws IOException {
         String content = loadFileContent(assetManager, genreListPath);
@@ -69,6 +78,13 @@ public class FileUtil {
         String content = loadFileContent(assetManager, configPath);
         Gson gson = new Gson();
         Type type = new TypeToken<MovieConfig>() {}.getType();
+        return gson.fromJson(content, type);
+    }
+    /** Load config from asset file. */
+    public static MusicConfig loadMusicConfig(AssetManager assetManager, String configPath) throws IOException {
+        String content = loadFileContent(assetManager, configPath);
+        Gson gson = new Gson();
+        Type type = new TypeToken<MusicConfig>() {}.getType();
         return gson.fromJson(content, type);
     }
 

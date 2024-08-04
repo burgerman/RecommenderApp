@@ -60,8 +60,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
 
         void bind(final MovieItem movie, final OnMovieItemClickListener listener) {
             titleTextView.setText(movie.getTitle());
-            genreTextView.setText(movie.getGenre());
-            ratingTextView.setText(String.format("Rating: %.1f", movie.getRating()));
+            genreTextView.setText(movie.getGenres().toString());
+            ratingTextView.setText(String.format("Rating: %.1f", movie.getScore()));
 
             itemView.setOnClickListener(v -> listener.onMovieItemClick(movie));
 

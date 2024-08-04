@@ -21,20 +21,20 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/musicTitle"
+                android:id="@+id/movieTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/musicArtist"
+                android:id="@+id/movieRating"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="14sp" />
 
             <TextView
-                android:id="@+id/musicGenre"
+                android:id="@+id/movieGenre"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="14sp" />

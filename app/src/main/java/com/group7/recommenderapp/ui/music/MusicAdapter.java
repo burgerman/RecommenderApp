@@ -53,7 +53,6 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MusicViewHol
         MusicViewHolder(@NonNull View itemView) {
             super(itemView);
             titleTextView = itemView.findViewById(R.id.musicTitle);
-            artistTextView = itemView.findViewById(R.id.musicArtist);
             genreTextView = itemView.findViewById(R.id.musicGenre);
             selectCheckBox = itemView.findViewById(R.id.selectCheckBox);
         }

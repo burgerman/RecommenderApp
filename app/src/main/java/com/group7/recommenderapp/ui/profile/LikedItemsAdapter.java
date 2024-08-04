@@ -44,7 +44,7 @@ public class LikedItemsAdapter extends RecyclerView.Adapter<LikedItemsAdapter.Vi
 
         ViewHolder(View itemView) {
             super(itemView);
-            itemTextView = itemView.findViewById(R.id.itemTextView);
+            itemTextView = itemView.findViewById(R.id.likedItemText);
         }
     }
 }
