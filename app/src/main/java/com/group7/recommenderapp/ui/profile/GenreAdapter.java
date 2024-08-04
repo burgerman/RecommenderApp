@@ -32,7 +32,10 @@ public class GenreAdapter extends RecyclerView.Adapter<GenreAdapter.GenreViewHol
 
     @Override
     public int getItemCount() {
-        return genres.size();
+        if(genres!=null){
+            return genres.size();
+        }
+        return 0;
     }
 
     public static class GenreViewHolder extends RecyclerView.ViewHolder {

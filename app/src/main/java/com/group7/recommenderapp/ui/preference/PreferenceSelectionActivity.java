@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.group7.recommenderapp.R;
 import com.group7.recommenderapp.service.MovieRecommender;
 import com.group7.recommenderapp.service.MusicRecommender;
+import com.group7.recommenderapp.service.UserService;
 import com.group7.recommenderapp.ui.home.HomeActivity;
 import com.group7.recommenderapp.util.DatabaseManager;
 import java.util.ArrayList;
@@ -33,15 +34,13 @@ public class PreferenceSelectionActivity extends AppCompatActivity implements Pr
     private MoviePreferenceAdapter movieAdapter;
     private MusicPreferenceAdapter musicAdapter;
     private String userId;
-    private MovieRecommender movieRecommender;
-    private MusicRecommender musicRecommender;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_preference_selection);
 
-        userId = DatabaseManager.getSharedInstance(this).getCurrentUserDocId();
+        userId = UserService.getUserServiceInstance(this).getCurrentUser();
         if (userId == null) {
             Toast.makeText(this, "Error: User ID not found", Toast.LENGTH_LONG).show();
             finish();
@@ -66,12 +65,7 @@ public class PreferenceSelectionActivity extends AppCompatActivity implements Pr
                 List<String> selectedMusicPreferences = musicAdapter.getSelectedPreferences();
                 String additionalMoviePreference = movieGenreInput.getText().toString();
                 String additionalMusicPreference = musicGenreInput.getText().toString();
-
-                Bundle bundle = new Bundle();
-                bundle.putStringArrayList("additionalMoviePreferences", new ArrayList<>(Arrays.asList(additionalMoviePreference.split(","))));
-                bundle.putStringArrayList("additionalMusicPreferences", new ArrayList<>(Arrays.asList(additionalMusicPreference.split(","))));
-
-                presenter.savePreferences(userId, selectedMoviePreferences, selectedMusicPreferences, bundle);
+                presenter.savePreferences(userId, selectedMoviePreferences, selectedMusicPreferences,  new ArrayList<>(Arrays.asList(additionalMoviePreference.split(","))), new ArrayList<>(Arrays.asList(additionalMusicPreference.split(","))));
             }
         });
 

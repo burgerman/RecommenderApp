@@ -66,7 +66,7 @@ public class UserProfileActivity extends AppCompatActivity implements UserProfil
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
                 });
-    preferencesTextView.setOnClickListener(v -> openPreferenceSelection());
+        preferencesTextView.setOnClickListener(v -> openPreferenceSelection());
         moviePreferencesButton.setOnClickListener(v -> openMoviePreferences());
         musicPreferencesButton.setOnClickListener(v -> openMusicPreferences());
     }

@@ -37,7 +37,10 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MusicViewHol
 
     @Override
     public int getItemCount() {
-        return music.size();
+        if(music!=null) {
+            return music.size();
+        }
+        return 0;
     }
 
     public void setMusic(List<ContentItem> music) {

@@ -53,7 +53,10 @@ public class MoviePreferenceAdapter extends RecyclerView.Adapter<MoviePreference
 
     @Override
     public int getItemCount() {
-        return allPreferences.size();
+        if(allPreferences!=null) {
+            return allPreferences.size();
+        }
+        return 0;
     }
 
     public List<String> getSelectedPreferences() {
