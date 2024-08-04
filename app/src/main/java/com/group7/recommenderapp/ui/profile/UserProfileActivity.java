@@ -2,36 +2,27 @@ package com.group7.recommenderapp.ui.profile;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.snackbar.Snackbar;
 import com.group7.recommenderapp.R;
-import com.group7.recommenderapp.entities.User;
 import com.group7.recommenderapp.entities.UserProfile;
-import com.group7.recommenderapp.fragments.MovieFragment;
-import com.group7.recommenderapp.fragments.MusicFragment;
 import com.group7.recommenderapp.service.UserService;
 import com.group7.recommenderapp.ui.login.LoginActivity;
 import com.group7.recommenderapp.ui.preference.PreferenceSelectionActivity;
-import com.group7.recommenderapp.util.UserUtils;
+import com.group7.recommenderapp.ui.movie.MovieActivity;
+import com.group7.recommenderapp.ui.music.MusicActivity;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class UserProfileActivity extends AppCompatActivity implements UserProfileContract.View {
 
     private ImageView profileImage;
     private EditText nameEditText, ageEditText, genderEditText;
-    private TextView preferencesTextView;
-    private Button saveButton, logoutButton, moviePreferencesButton, musicPreferencesButton;
-    private RecyclerView genreRecyclerView, likedItemsRecyclerView;
+    private Button saveButton, logoutButton, genrePreferencesButton, movieWishlistButton, musicWishlistButton;
     private UserProfileContract.Presenter presenter;
 
     @Override
@@ -42,8 +33,6 @@ public class UserProfileActivity extends AppCompatActivity implements UserProfil
         initViews();
         presenter = new UserProfilePresenter(this, this);
         presenter.loadUserProfile();
-
-
     }
 
     private void initViews() {
@@ -51,24 +40,19 @@ public class UserProfileActivity extends AppCompatActivity implements UserProfil
         nameEditText = findViewById(R.id.nameEditText);
         ageEditText = findViewById(R.id.ageEditText);
         genderEditText = findViewById(R.id.genderEditText);
-        preferencesTextView = findViewById(R.id.preferencesTextView);
         saveButton = findViewById(R.id.saveButton);
         logoutButton = findViewById(R.id.logoutButton);
-        moviePreferencesButton = findViewById(R.id.moviePreferencesButton);
-        musicPreferencesButton = findViewById(R.id.musicPreferencesButton);
-        genreRecyclerView = findViewById(R.id.genreRecyclerView);
-        likedItemsRecyclerView = findViewById(R.id.likedItemsRecyclerView);
-        presenter = new UserProfilePresenter(this, this);
+        genrePreferencesButton = findViewById(R.id.button);
+        movieWishlistButton = findViewById(R.id.moviePreferencesButton);
+        musicWishlistButton = findViewById(R.id.musicPreferencesButton);
+
         profileImage.setImageResource(R.mipmap.profile_placeholder);
 
         saveButton.setOnClickListener(v -> saveProfile());
-        logoutButton.setOnClickListener(v -> {
-            Intent intent = new Intent(this, LoginActivity.class);
-            startActivity(intent);
-                });
-        preferencesTextView.setOnClickListener(v -> openPreferenceSelection());
-        moviePreferencesButton.setOnClickListener(v -> openMoviePreferences());
-        musicPreferencesButton.setOnClickListener(v -> openMusicPreferences());
+        logoutButton.setOnClickListener(v -> navigateToLogin());
+        genrePreferencesButton.setOnClickListener(v -> openPreferenceSelection());
+        movieWishlistButton.setOnClickListener(v -> openMovieWishlist());
+        musicWishlistButton.setOnClickListener(v -> openMusicWishlist());
     }
 
     private void saveProfile() {
@@ -80,55 +64,28 @@ public class UserProfileActivity extends AppCompatActivity implements UserProfil
         presenter.updateUserProfile(userInfo);
     }
 
-
     private void openPreferenceSelection() {
         Intent intent = new Intent(this, PreferenceSelectionActivity.class);
         startActivity(intent);
     }
 
-    private void openMoviePreferences() {
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragmentContainer, new MovieFragment())
-                .addToBackStack(null)
-                .commit();
+    private void openMovieWishlist() {
+        Intent intent = new Intent(this, MovieActivity.class);
+        startActivity(intent);
     }
 
-    private void openMusicPreferences() {
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragmentContainer, new MusicFragment())
-                .addToBackStack(null)
-                .commit();
+    private void openMusicWishlist() {
+        Intent intent = new Intent(this, MusicActivity.class);
+        startActivity(intent);
     }
 
     @Override
     public void displayUserProfile(UserProfile userProfile) {
         String userName = UserService.getUserServiceInstance(this).getCurrentUser();
         nameEditText.setText(userName);
-
         ageEditText.setText(String.valueOf(userProfile.getAge()));
         genderEditText.setText(userProfile.getGender());
-
-        GenreAdapter movieGenreAdapter = new GenreAdapter((List<String>)userProfile.getPreferences().getPreferenceDict().get("categoriesClass1"));
-        genreRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        genreRecyclerView.setAdapter(movieGenreAdapter);
-        if(userProfile.getPreferences().getPreferenceDict().get("categoriesClass2")!=null) {
-            GenreAdapter musicGenreAdapter = new GenreAdapter((List<String>)userProfile.getPreferences().getPreferenceDict().get("categoriesClass2"));
-            genreRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-            genreRecyclerView.setAdapter(musicGenreAdapter);
-        }
-
-        LikedItemsAdapter likedMovieItemsAdapter = new LikedItemsAdapter((List<String>)userProfile.getPreferences().getPreferenceDict().get("LikedMovieList"));
-        likedItemsRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        likedItemsRecyclerView.setAdapter(likedMovieItemsAdapter);
-
-        if(userProfile.getPreferences().getPreferenceDict().get("LikedMusicList")!=null) {
-            LikedItemsAdapter likedMusicItemsAdapter = new LikedItemsAdapter((List<String>)userProfile.getPreferences().getPreferenceDict().get("LikedMusicList"));
-            likedItemsRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-            likedItemsRecyclerView.setAdapter(likedMusicItemsAdapter);
-        }
     }
-
-
 
     @Override
     public void showError(String message) {
@@ -146,6 +103,4 @@ public class UserProfileActivity extends AppCompatActivity implements UserProfil
     public void showProfileUpdateSuccess() {
         Snackbar.make(findViewById(android.R.id.content), "Profile updated successfully", Snackbar.LENGTH_LONG).show();
     }
-
-
 }
