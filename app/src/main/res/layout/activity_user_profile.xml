@@ -35,18 +35,12 @@
             android:layout_height="wrap_content"
             android:hint="Gender" />
 
-        <TextView
-            android:id="@+id/preferencesTextView"
+        <Button
+            android:id="@+id/button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Preferences"
-            android:textStyle="bold"
-            android:layout_marginTop="16dp" />
+            android:text="Genre Preferences" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/genreRecyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -58,27 +52,16 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Check movie preferences" />
+                android:text="Check movie wishlist" />
 
             <Button
                 android:id="@+id/musicPreferencesButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Check music preferences" />
+                android:text="Check music wishlist" />
+
         </LinearLayout>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Liked Items"
-            android:textStyle="bold"
-            android:layout_marginTop="16dp" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/likedItemsRecyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
 
         <Button
             android:id="@+id/saveButton"

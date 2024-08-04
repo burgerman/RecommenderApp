@@ -79,9 +79,8 @@ public class UserService {
     }
 
     public void createOrUpdateUserProfile(Map<String, Object> userInfo) {
-        if(userInfo.get("username")!=null) {
-            String userName = (String) userInfo.get("username");
-            String profileDocId = UserUtils.getUserProfileIDByName(userName);
+        if(currentUser!=null) {
+            String profileDocId = UserUtils.getUserProfileIDByName(currentUser);
             UserProfile userProfile = new UserProfile(profileDocId);
             userProfile.setAge(userInfo.get("age")!= null? (Integer) userInfo.get("age"):0);
             userProfile.setGender(userInfo.get("gender")!=null? (String) userInfo.get("gender"):"");
