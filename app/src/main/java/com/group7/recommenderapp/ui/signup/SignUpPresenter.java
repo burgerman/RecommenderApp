@@ -2,6 +2,8 @@ package com.group7.recommenderapp.ui.signup;
 
 import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 
+import android.content.Context;
+
 import com.group7.recommenderapp.dao.UserDao;
 import com.group7.recommenderapp.entities.User;
 import com.group7.recommenderapp.service.UserService;
@@ -12,11 +14,11 @@ import java.security.NoSuchAlgorithmException;
 
 public class SignUpPresenter implements SignUpContract.Presenter {
     private SignUpContract.View view;
-    private UserDao userDao;
+    private Context context;
 
-    public SignUpPresenter(SignUpContract.View view, UserDao userDao) {
+    public SignUpPresenter(SignUpContract.View view, Context context) {
         this.view = view;
-        this.userDao = userDao;
+        this.context = context;
     }
 
     @Override
@@ -36,7 +38,7 @@ public class SignUpPresenter implements SignUpContract.Presenter {
             return;
         }
 
-        int res = UserService.getUserServiceInstance(getApplicationContext()).createNewUser(usernameOrEmail, password);
+        int res = UserService.getUserServiceInstance(context).createNewUser(usernameOrEmail, password);
 
         if (res == 200) {
             view.showSignUpSuccess();

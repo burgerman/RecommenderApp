@@ -25,7 +25,7 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
 
         usernameOrEmailInput = findViewById(R.id.usernameOrEmailInput);
         passwordInput = findViewById(R.id.passwordInput);
-        presenter = new LoginPresenter(this);
+        presenter = new LoginPresenter(this, this);
     }
 
     public void onLoginTapped(View view) {
@@ -43,7 +43,6 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
     public void showLoginSuccess() {
         Intent intent = new Intent(this, HomeActivity.class);
         startActivity(intent);
-        finish();
     }
 
     @Override

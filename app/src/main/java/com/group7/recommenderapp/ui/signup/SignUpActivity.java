@@ -25,7 +25,7 @@ public class SignUpActivity extends AppCompatActivity implements SignUpContract.
         usernameOrEmailInput = findViewById(R.id.usernameInput);
         passwordInput = findViewById(R.id.passwordInput);
         confirmPasswordInput = findViewById(R.id.confirmPasswordInput);
-
+        presenter = new SignUpPresenter(this, this);
     }
 
     public void onSignUpTapped(View view) {
@@ -40,7 +40,6 @@ public class SignUpActivity extends AppCompatActivity implements SignUpContract.
         Toast.makeText(this, "Sign up successful", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
-        finish();
     }
 
     @Override

@@ -2,6 +2,8 @@ package com.group7.recommenderapp.ui.login;
 
 import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 
+import android.content.Context;
+
 import com.group7.recommenderapp.dao.UserDao;
 import com.group7.recommenderapp.entities.User;
 import com.group7.recommenderapp.service.UserService;
@@ -10,9 +12,11 @@ import com.group7.recommenderapp.util.UserUtils;
 
 public class LoginPresenter implements LoginContract.Presenter {
     private LoginContract.View view;
+    private Context context;
 
-    public LoginPresenter(LoginContract.View view) {
+    public LoginPresenter(LoginContract.View view, Context context) {
         this.view = view;
+        this.context = context;
     }
 
     @Override
@@ -21,11 +25,10 @@ public class LoginPresenter implements LoginContract.Presenter {
             view.showLoginError("Please fill in all fields");
             return;
         }
-        int res = UserService.getUserServiceInstance(getApplicationContext()).authenUser(usernameOrEmail, password);
-        String userDocId = UserUtils.generateUserDocId(usernameOrEmail);
+        int res = UserService.getUserServiceInstance(context).authenUser(usernameOrEmail, password);
 
         if (res == 200) {
-            UserService.getUserServiceInstance(getApplicationContext()).setCurrentUser(usernameOrEmail);
+            UserService.getUserServiceInstance(context).setCurrentUser(usernameOrEmail);
             // Call to download content files before calling recommendation services
             downloadContentFile();
             view.showLoginSuccess();
@@ -37,8 +40,8 @@ public class LoginPresenter implements LoginContract.Presenter {
     }
 
     private void downloadContentFile() {
-        String movieContentFile = getApplicationContext().getExternalFilesDir(null).toString() + "/" + FileUtil.LOCAL_MOVIE_CONTENT_FILE_NAME;
-        String musicContentFile = getApplicationContext().getExternalFilesDir(null).toString() + "/" + FileUtil.LOCAL_MUSIC_CONTENT_FILE_NAME;
+        String movieContentFile = context.getApplicationContext().getExternalFilesDir(null).toString() + "/" + FileUtil.LOCAL_MOVIE_CONTENT_FILE_NAME;
+        String musicContentFile = context.getApplicationContext().getExternalFilesDir(null).toString() + "/" + FileUtil.LOCAL_MUSIC_CONTENT_FILE_NAME;
         new FileUtil.DownloadFileTask().execute(FileUtil.MUSIC_CONTENT_FILE_URL, musicContentFile);
         new FileUtil.DownloadFileTask().execute(FileUtil.MOVIE_CONTENT_FILE_URL, movieContentFile);
     }
