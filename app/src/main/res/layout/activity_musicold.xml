@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.music.MusicActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar_music"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:layout_scrollFlags="scroll|enterAlways"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            app:title="@string/music">
+            <ImageView
+                android:id="@+id/homeIcon_music"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_home"
+                android:padding="16dp"
+                android:contentDescription="@string/home_icon" />
+
+            <ImageView
+                android:id="@+id/movieicon_music"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_movies"
+                android:padding="16dp"
+                android:layout_marginStart="16dp"
+                android:contentDescription="@string/movie_icon" />
+
+            <ImageView
+                android:id="@+id/musicicon_music"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_music"
+                android:padding="16dp"
+                android:layout_marginStart="16dp"
+                android:contentDescription="@string/music_icon" />
+
+            <ImageView
+                android:id="@+id/profileicon_music"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_profile"
+                android:padding="16dp"
+                android:layout_marginStart="16dp"
+                android:contentDescription="@string/profile_icon" />
+
+
+            <ImageButton
+                android:id="@+id/heartButton_movie"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginEnd="16dp"
+                android:src="@drawable/ic_heart_outline"
+                android:background="?attr/selectableItemBackground"
+                android:padding="8dp" />
+
+        </androidx.appcompat.widget.Toolbar>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/musicRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:padding="16dp"
+            android:clipToPadding="false"
+            android:scrollbars="vertical" />
+
+        <TextView
+            android:id="@+id/musicDetailsTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:visibility="gone"
+            android:background="@android:color/white"
+            android:elevation="4dp"/>
+
+        <ProgressBar
+            android:id="@+id/progressBar_music"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone" />
+
+    </LinearLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/feedbackButton_music"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="16dp"
+        android:src="@drawable/ic_feedback"
+        android:backgroundTint="?attr/colorPrimary" />
+
+    <LinearLayout
+        android:id="@+id/feedbackContainer_music"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:background="@android:color/white"
+        android:visibility="gone"
+        android:elevation="4dp">
+
+        <EditText
+            android:id="@+id/feedbackEditText_music"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter your feedback"
+            android:padding="8dp"
+            android:layout_marginBottom="8dp" />
+
+        <Button
+            android:id="@+id/submitFeedbackButton_music"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Submit"
+            android:layout_gravity="end"
+            android:padding="8dp"
+            android:background="?attr/colorAccent"
+            android:textColor="@android:color/white" />
+
+    </LinearLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
