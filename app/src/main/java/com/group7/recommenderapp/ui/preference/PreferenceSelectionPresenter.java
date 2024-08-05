@@ -47,20 +47,21 @@ public class PreferenceSelectionPresenter implements PreferenceSelectionContract
         view.showLoading();
 
         UserService userService =  UserService.getUserServiceInstance(context);
+        UserProfile userProfile = userService.selectUserProfile(userService.getCurrentUser());
         Map<String, Object> userInfo = new HashMap<>();
         userInfo.put("username", userService.getCurrentUser());
-        userInfo.put("class1", "Movie");
-        userInfo.put("class2", "Music");
+        userInfo.put("class1", userProfile.getPreferences().getClass1()!=null? userProfile.getPreferences().getClass1():"Movie");
+        userInfo.put("class2", userProfile.getPreferences().getClass2()!=null? userProfile.getPreferences().getClass2():"Music");
         userInfo.put("language", "English");
-        userInfo.put("age", 0);
-        userInfo.put("gender", "");
+        userInfo.put("age", userProfile.getAge());
+        userInfo.put("gender", (userProfile.getGender().isEmpty() || userProfile.getGender()==null)?"":userProfile.getGender());
         Map<String, Object> preferences = new HashMap<>();
         preferences.put("categoriesClass1", moviePreferences);
         preferences.put("categoriesClass2", musicPreferences);
         preferences.put("additionalMoviePreferences", addiMoviePref);
         preferences.put("additionalMusicPreferences", addMusicPref);
-        preferences.put("LikedMovieList", null);
-        preferences.put("LikedMusicList", null);
+        preferences.put("LikedMovieList", userProfile.getPreferences().getPreferenceDict().get("LikedMovieList"));
+        preferences.put("LikedMusicList", userProfile.getPreferences().getPreferenceDict().get("LikedMusicList"));
         userInfo.put("preferences", preferences);
         UserService.getUserServiceInstance(context).createOrUpdateUserProfile(userInfo);
 

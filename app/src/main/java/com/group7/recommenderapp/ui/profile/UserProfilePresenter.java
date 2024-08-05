@@ -45,7 +45,12 @@ public class UserProfilePresenter implements UserProfileContract.Presenter {
     public void updateUserProfile(Map<String, Object> userInfo) {
         // Prepare the user info map with additional genres
         prepareUserInfoWithAdditionalGenres(userInfo);
-
+        UserService us = UserService.getUserServiceInstance(context);
+        UserProfile userProfile = us.selectUserProfile(us.getCurrentUser());
+        userInfo.put("preferences", userProfile.getPreferences().getPreferenceDict());
+        userInfo.put("class1", userProfile.getPreferences().getClass1());
+        userInfo.put("class2", userProfile.getPreferences().getClass2());
+        userInfo.put("language", userProfile.getPreferences().getPreferredLanguage());
         UserService.getUserServiceInstance(context).createOrUpdateUserProfile(userInfo);
         view.showProfileUpdateSuccess();
         loadUserProfile();

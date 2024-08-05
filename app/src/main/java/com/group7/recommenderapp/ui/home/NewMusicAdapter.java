@@ -27,10 +27,12 @@ public class NewMusicAdapter extends RecyclerView.Adapter<NewMusicAdapter.MusicV
 
     @Override
     public void onBindViewHolder(@NonNull MusicViewHolder holder, int position) {
-        // Bind data to the view holder
-        ContentItem musicItem = musics.get(position);
-        // Set data to views
-        holder.bind(musicItem);
+        if(position<musics.size()) {
+            // Bind data to the view holder
+            ContentItem musicItem = musics.get(position);
+            // Set data to views
+            holder.bind(musicItem);
+        }
     }
 
     @Override

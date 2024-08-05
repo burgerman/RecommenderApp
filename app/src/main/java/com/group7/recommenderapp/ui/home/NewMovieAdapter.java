@@ -26,10 +26,12 @@ public class NewMovieAdapter extends RecyclerView.Adapter<NewMovieAdapter.MovieV
 
     @Override
     public void onBindViewHolder(@NonNull NewMovieAdapter.MovieViewHolder holder, int position) {
-        // Bind data to the view holder
-        ContentItem musicItem = movies.get(position);
-        // Set data to views
-        holder.bind(musicItem);
+        if(position<movies.size()) {
+            // Bind data to the view holder
+            ContentItem musicItem = movies.get(position);
+            // Set data to views
+            holder.bind(musicItem);
+        }
     }
 
     @Override
