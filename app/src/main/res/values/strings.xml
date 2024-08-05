@@ -25,5 +25,12 @@
     <string name="help">Help</string>
     <string name="tfe_re_recommendation_text">Our Recommendation for you</string>
     <string name="tfe_re_instructions">Please select your favourite movies</string>
-
+    <string name="name">Name</string>
+    <string name="age">Age</string>
+    <string name="gender">Gender</string>
+    <string name="button_preferences">GENRE PREFERENCES</string>
+    <string name="button_movie_wishlist">CHECK MOVIE WISHLIST</string>
+    <string name="button_music_wishlist">CHECK MUSIC WISHLIST</string>
+    <string name="button_save_changes">SAVE CHANGES</string>
+    <string name="button_logout">LOGOUT</string>
 </resources>

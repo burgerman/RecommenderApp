@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Application de recommandation</string>
+    <string name="username">Nom d’utilisateur</string>
+    <string name="email">Messagerie électronique</string>
+    <string name="password">Mot de passe</string>
+    <string name="sign_in">Connexion</string>
+    <string name="sign_up">S’enregistrer</string>
+    <string name="title_activity_main">Activité principale</string>
+    <string name="select_movie_preferences">Sélectionnez Préférences vidéo</string>
+    <string name="select_music_preferences">Sélectionnez Préférences musicales</string>
+    <string name="save_preferences">Enregistrer les préférences</string>
+    <string name="preference_selection">Préférence</string>
+    <string name="recommended_content">Contenu recommandé</string>
+    <string name="home_icon">Domicile</string>
+    <string name="movie_icon">Films</string>
+    <string name="music_icon">Musique</string>
+    <string name="profile_icon">Profil</string>
+    <string name="movie_recommendations">Recommandations de films</string>
+    <string name="music_recommendations">Recommandations musicales</string>
+    <string name="movies">Films</string>
+    <string name="music">Musique</string>
+    <string name="Details">Détails</string>
+    <string name="home">domicile</string>
+    <string name="user_profile">Profil d’utilisateur</string>
+    <string name="help">Aide</string>
+    <string name="tfe_re_recommendation_text">Notre recommandation pour vous</string>
+    <string name="tfe_re_instructions">Veuillez sélectionner vos films préférés</string>
+    <string name="name">nom</string>
+    <string name="age">âge</string>
+    <string name="gender">Genre</string>
+    <string name="button_preferences">PRÉFÉRENCES DE GENRE</string>
+    <string name="button_movie_wishlist">VOIR LA LISTE DE SOUHAITS DE FILMS</string>
+    <string name="button_music_wishlist">VÉRIFIER LA LISTE DE SOUHAITS MUSICAUX</string>
+    <string name="button_save_changes">ENREGISTRER LES MODIFICATIONS</string>
+    <string name="button_logout">DÉCONNEXION</string>
+</resources>
