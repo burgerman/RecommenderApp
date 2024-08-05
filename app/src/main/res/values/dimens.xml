@@ -6,6 +6,6 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="date">25sp</dimen>
     <dimen name="ic_clear_margin">16dp</dimen>
-    <dimen name="movie_item_margin">16dp</dimen>
-    <dimen name="music_item_margin">16dp</dimen>
+    <dimen name="movie_item_margin">4dp</dimen>
+    <dimen name="music_item_margin">4dp</dimen>
 </resources>
