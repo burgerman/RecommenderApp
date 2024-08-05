@@ -70,27 +70,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/appBarLayout" />
 
-    <ScrollView
-        android:id="@+id/music_scroll_view"
+    <FrameLayout
+        android:id="@+id/music_fragment_container"
         android:layout_width="0dp"
         android:layout_height="370dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/instructions_text_view">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <fragment
-                android:id="@+id/music_fragment"
-                android:name="com.group7.recommenderapp.ui.music.MusicFragment"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:baselineAligned="false" />
-        </LinearLayout>
-    </ScrollView>
+        app:layout_constraintTop_toBottomOf="@+id/instructions_text_view" />
 
     <TextView
         android:id="@+id/recommendation_text_view"
@@ -98,35 +84,17 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="@string/tfe_re_recommendation_text"
-        app:layout_constraintBottom_toTopOf="@+id/result_scroll_view"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/music_scroll_view" />
+        app:layout_constraintTop_toBottomOf="@+id/music_fragment_container" />
 
-    <ScrollView
-        android:id="@+id/result_scroll_view"
+    <FrameLayout
+        android:id="@+id/recommendation_fragment_container"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/recommendation_text_view">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <TextView
-                android:id="@+id/result_text_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="invisible" />
-            <fragment
-                android:id="@+id/recommendation_fragment"
-                android:name="com.group7.recommenderapp.ui.music.RecommendationFragment"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-        </LinearLayout>
-    </ScrollView>
+        app:layout_constraintTop_toBottomOf="@+id/recommendation_text_view" />
 
     <ProgressBar
         android:id="@+id/progressBar_music"
