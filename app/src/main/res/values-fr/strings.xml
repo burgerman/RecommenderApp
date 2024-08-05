@@ -34,4 +34,7 @@
     <string name="button_music_wishlist">VÉRIFIER LA LISTE DE SOUHAITS MUSICAUX</string>
     <string name="button_save_changes">ENREGISTRER LES MODIFICATIONS</string>
     <string name="button_logout">DÉCONNEXION</string>
+    <string name="mu_re_instructions">Veuillez sélectionner vos musiques préférés</string>
+    <string name="confirm_password">Confirmer le mot de passe</string>
+
 </resources>

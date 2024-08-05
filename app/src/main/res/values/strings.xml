@@ -34,5 +34,6 @@
     <string name="button_save_changes">SAVE CHANGES</string>
     <string name="button_logout">LOGOUT</string>
     <string name="mu_re_instructions">Please select your favourite music</string>
+    <string name="confirm_password">Confirm password</string>
 
 </resources>

@@ -58,15 +58,6 @@
                 android:padding="16dp"
                 android:layout_marginStart="16dp"
                 android:contentDescription="@string/profile_icon" />
-            <ImageButton
-                android:id="@+id/heartButton_movie"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:layout_marginEnd="16dp"
-                android:src="@drawable/ic_heart_outline"
-                android:background="?attr/selectableItemBackground"
-                android:padding="8dp" />
         </androidx.appcompat.widget.Toolbar>
 
     </com.google.android.material.appbar.AppBarLayout>
@@ -136,8 +127,6 @@
                 android:layout_height="match_parent" />
         </LinearLayout>
     </ScrollView>
-
-
 
     <ProgressBar
         android:id="@+id/progressBar_movie"
