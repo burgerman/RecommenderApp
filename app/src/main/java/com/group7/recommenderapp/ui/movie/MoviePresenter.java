@@ -36,7 +36,7 @@ public class MoviePresenter implements MovieContract.Presenter {
         ResultSet rs = new ResultSet();
         rs.setItemset(movies);
         view.hideLoading();
-        view.showMovies(rs.getTopK(20));
+//        view.showMovies(rs.getTopK(20));
     }
 
     @Override
@@ -44,10 +44,10 @@ public class MoviePresenter implements MovieContract.Presenter {
         // Handle movie item click, e.g., open movie details
     }
 
-    @Override
-    public void onHeartButtonClicked() {
-
-    }
+//    @Override
+//    public void onHeartButtonClicked() {
+//
+//    }
 
     @Override
     public void onFeedbackSubmitted(String feedback) {

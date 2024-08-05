@@ -31,7 +31,7 @@ public class MusicActivity extends AppCompatActivity implements MusicContract.Vi
     private ProgressBar progressBar;
     private MusicAdapter musicAdapter;
     private MusicContract.Presenter presenter;
-    private ImageButton heartButton;
+//    private ImageButton heartButton;
     private FloatingActionButton feedbackButton;
     private LinearLayout feedbackContainer;
     private EditText feedbackEditText;
@@ -50,7 +50,7 @@ public class MusicActivity extends AppCompatActivity implements MusicContract.Vi
 
         musicRecyclerView = findViewById(R.id.musicRecyclerView);
         progressBar = findViewById(R.id.progressBar_music);
-        heartButton = findViewById(R.id.heartButton_music);
+//        heartButton = findViewById(R.id.heartButton_music);
         feedbackButton = findViewById(R.id.feedbackButton_music);
         feedbackContainer = findViewById(R.id.feedbackContainer_music);
         feedbackEditText = findViewById(R.id.feedbackEditText_music);
@@ -59,7 +59,7 @@ public class MusicActivity extends AppCompatActivity implements MusicContract.Vi
         presenter = new MusicPresenter(this, this);
 
         setupRecyclerView();
-        setupHeartButton();
+//        setupHeartButton();
         setupFeedbackButton();
         homeIcon.setOnClickListener(v -> presenter.onHomeIconClicked());
         movieIcon.setOnClickListener(v -> presenter.onMovieIconClicked());
@@ -73,9 +73,9 @@ public class MusicActivity extends AppCompatActivity implements MusicContract.Vi
         musicRecyclerView.setAdapter(musicAdapter);
     }
 
-    private void setupHeartButton() {
-        heartButton.setOnClickListener(v -> presenter.onHeartButtonClicked());
-    }
+//    private void setupHeartButton() {
+//        heartButton.setOnClickListener(v -> presenter.onHeartButtonClicked());
+//    }
 
     private void setupFeedbackButton() {
         feedbackButton.setOnClickListener(v -> {
@@ -112,10 +112,10 @@ public class MusicActivity extends AppCompatActivity implements MusicContract.Vi
         progressBar.setVisibility(View.GONE);
     }
 
-    @Override
-    public void updateHeartButton(boolean isFilled) {
-        heartButton.setImageResource(isFilled ? R.drawable.ic_heart_filled : R.drawable.ic_heart_outline);
-    }
+//    @Override
+//    public void updateHeartButton(boolean isFilled) {
+//        heartButton.setImageResource(isFilled ? R.drawable.ic_heart_filled : R.drawable.ic_heart_outline);
+//    }
 
     @Override
     public void showFeedbackSubmitted() {

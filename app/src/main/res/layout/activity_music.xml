@@ -58,7 +58,7 @@
 
 
             <ImageButton
-                android:id="@+id/heartButton_music"
+                android:id="@+id/heartButton_movie"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"

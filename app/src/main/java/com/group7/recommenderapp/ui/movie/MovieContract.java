@@ -6,16 +6,16 @@ import java.util.List;
 
 public interface MovieContract {
     interface View {
-        void showMovies(List<ContentItem> movies);
+//        void showMovies(List<ContentItem> movies);
         void showError(String message);
 
         void showMessage(String message);
 
         void showLoading();
         void hideLoading();
-        void updateHeartButton(boolean isFilled);
+//        void updateHeartButton(boolean isFilled);
         void showFeedbackSubmitted();
-        void showMovieDetails(MovieItem movie);
+//        void showMovieDetails(MovieItem movie);
         void navigateToHomeTap();
         void navigateToMusicTap();
         void navigateToProfile();
@@ -24,7 +24,7 @@ public interface MovieContract {
     interface Presenter {
         void loadMovies();
         void onMovieItemClicked(ContentItem movie);
-        void onHeartButtonClicked();
+//        void onHeartButtonClicked();
         void onFeedbackSubmitted(String feedback);
         void onHomeIconClicked();
         void onMusicIconClicked();

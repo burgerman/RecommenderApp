@@ -45,10 +45,10 @@ public class MusicPresenter implements MusicContract.Presenter {
         // Handle music item click, e.g., open music details
     }
 
-    @Override
-    public void onHeartButtonClicked() {
-
-    }
+//    @Override
+//    public void onHeartButtonClicked() {
+//
+//    }
 
     @Override
     public void onFeedbackSubmitted(String feedback) {

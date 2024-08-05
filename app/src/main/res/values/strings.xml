@@ -23,5 +23,7 @@
     <string name="home">home</string>
     <string name="user_profile">UserProfile</string>
     <string name="help">Help</string>
+    <string name="tfe_re_recommendation_text">Our Recommendation for you</string>
+    <string name="tfe_re_instructions">Please select your favourite movies</string>
 
 </resources>

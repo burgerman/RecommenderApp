@@ -88,10 +88,10 @@ public class MusicFragment extends Fragment implements MusicContract.View {
         progressBar.setVisibility(View.GONE);
     }
 
-    @Override
-    public void updateHeartButton(boolean isFilled) {
-
-    }
+//    @Override
+//    public void updateHeartButton(boolean isFilled) {
+//
+//    }
 
     @Override
     public void showFeedbackSubmitted() {

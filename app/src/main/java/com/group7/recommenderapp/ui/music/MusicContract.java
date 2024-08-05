@@ -10,7 +10,7 @@ public interface MusicContract {
         void showError(String message);
         void showLoading();
         void hideLoading();
-        void updateHeartButton(boolean isFilled);
+//        void updateHeartButton(boolean isFilled);
         void showFeedbackSubmitted();
         void showMusicDetails(MusicItem music);
         void navigateToHomeTap();
@@ -21,7 +21,7 @@ public interface MusicContract {
     interface Presenter {
         void loadMusic();
         void onMusicItemClicked(ContentItem music);
-        void onHeartButtonClicked();
+//        void onHeartButtonClicked();
         void onFeedbackSubmitted(String feedback);
 
         void onHomeIconClicked();

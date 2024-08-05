@@ -50,7 +50,6 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MusicViewHol
 
     static class MusicViewHolder extends RecyclerView.ViewHolder {
         TextView titleTextView;
-        TextView artistTextView;
         TextView genreTextView;
         CheckBox selectCheckBox;
 

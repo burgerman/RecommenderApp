@@ -70,20 +70,20 @@ public class MovieFragment extends Fragment implements MovieContract.View {
 
     }
 
-    @Override
-    public void updateHeartButton(boolean isFilled) {
-        // This method is handled in MovieActivity
-    }
+//    @Override
+//    public void updateHeartButton(boolean isFilled) {
+//        // This method is handled in MovieActivity
+//    }
 
     @Override
     public void showFeedbackSubmitted() {
 
     }
 
-    @Override
-    public void showMovieDetails(MovieItem movie) {
-
-    }
+//    @Override
+//    public void showMovieDetails(MovieItem movie) {
+//
+//    }
 
     @Override
     public void navigateToHomeTap() {
